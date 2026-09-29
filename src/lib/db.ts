@@ -1,0 +1,454 @@
+import fs from 'fs';
+import path from 'path';
+import { Product, Category, Order, Review, Discount, StoreSettings } from '@/types';
+
+const DATA_DIR = path.join(process.cwd(), 'src', 'data');
+const DB_FILE = path.join(DATA_DIR, 'db.json');
+const EMAILS_FILE = path.join(DATA_DIR, 'sent_emails.json');
+
+export interface DBData {
+  products: Product[];
+  categories: Category[];
+  orders: Order[];
+  reviews: Review[];
+  discounts: Discount[];
+  settings: StoreSettings;
+}
+
+const initialCategories: Category[] = [
+  {
+    id: 'candles',
+    name: 'Candles',
+    slug: 'candles',
+    description: 'Hand-poured 100% soy wax candles infused with natural essential oils.',
+    image: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'resin-crafts',
+    name: 'Resin Crafts',
+    slug: 'resin-crafts',
+    description: 'Artisanal resin home decor, coasters, trays & keepsakes.',
+    image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'customized-products',
+    name: 'Customized Products',
+    slug: 'customized-products',
+    description: 'Bespoke items personalized with your custom text, names, or colors.',
+    image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'gift-sets',
+    name: 'Gift Sets',
+    slug: 'gift-sets',
+    description: 'Curated gift hampers for birthdays, anniversaries, and festivals.',
+    image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'new-arrivals',
+    name: 'New Arrivals',
+    slug: 'new-arrivals',
+    description: 'Freshly handcrafted creations just added to our studio.',
+    image: 'https://images.unsplash.com/photo-1602874801007-bd458bb1b8b6?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'sale',
+    name: 'Sale',
+    slug: 'sale',
+    description: 'Exclusive discounted handmade pieces available for a limited time.',
+    image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80',
+  },
+];
+
+const initialProducts: Product[] = [
+  {
+    id: 'prod-001',
+    slug: 'cozy-vanilla-amber-soy-candle',
+    name: 'Cozy Vanilla & Warm Amber Soy Candle',
+    category: 'candles',
+    subcategory: 'Jar Candles',
+    description: 'Wrap yourself in warmth with our signature Cozy Vanilla & Amber hand-poured soy wax candle. Made with 100% eco-friendly soy wax, cotton wicks, and premium phthalate-free fragrance oils.',
+    price: 799,
+    salePrice: 599,
+    discountPercent: 25,
+    isSale: true,
+    images: [
+      'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1602874801007-bd458bb1b8b6?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1596435707659-d89069d67566?auto=format&fit=crop&w=1000&q=80',
+    ],
+    stock: 24,
+    variants: [
+      { id: 'v1', name: 'Standard Jar (180g)', price: 799, salePrice: 599, stock: 15 },
+      { id: 'v2', name: 'Grand Luxury Glass (300g)', price: 1199, salePrice: 949, stock: 9 },
+    ],
+    dimensions: '8cm x 8cm x 9cm',
+    weight: '180g wax weight',
+    materials: '100% Natural Soy Wax, Lead-Free Cotton Wick, Amber Glass Jar',
+    fragranceInfo: 'Top Notes: Creamy Vanilla | Heart: Warm Amber, Honey | Base: Sandalwood, Musk',
+    colorOptions: ['Amber Amber', 'Matte White Jar'],
+    customizationFields: [
+      { id: 'c1', label: 'Custom Lid Message', type: 'text', required: false, helpText: 'Add a custom message on the jar lid sticker (Max 25 chars).' }
+    ],
+    careInstructions: 'Trim wick to 1/4 inch before each lighting. Burn for at least 2 hours on first burn for an even wax pool.',
+    shippingInfo: 'Ships within 2-3 business days across India.',
+    tags: ['Best Seller', 'Soy Wax', 'Warm Fragrance', 'Cozy'],
+    isFeatured: true,
+    isBestseller: true,
+    isNewArrival: false,
+    status: 'active',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'prod-002',
+    slug: 'rose-petal-gold-leaf-resin-coasters',
+    name: 'Rose Petal & Gold Leaf Resin Coasters (Set of 4)',
+    category: 'resin-crafts',
+    subcategory: 'Home Decor',
+    description: 'Handcrafted crystal-clear epoxy resin coasters embedded with real dried red rose petals and shimmering 24k style gold leaf. Perfect for coffee tables and luxury decor gifts.',
+    price: 1299,
+    salePrice: 999,
+    discountPercent: 23,
+    isSale: true,
+    images: [
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1000&q=80',
+    ],
+    stock: 12,
+    variants: [
+      { id: 'v1', name: 'Round (Set of 4)', price: 1299, salePrice: 999, stock: 8 },
+      { id: 'v2', name: 'Hexagon (Set of 4)', price: 1399, salePrice: 1099, stock: 4 },
+    ],
+    dimensions: '10cm diameter each, 0.8cm thickness',
+    weight: '350g (Set)',
+    materials: 'High-grade Non-toxic Epoxy Resin, Natural Dried Rose Petals, Gold Flakes',
+    colorOptions: ['Ruby Red & Gold', 'Soft Pink & Silver'],
+    customizationFields: [
+      { id: 'c1', label: 'Initial/Monogram Engraving', type: 'text', required: false, helpText: 'Add custom initials on 1 or all coasters.' }
+    ],
+    careInstructions: 'Wipe clean with a soft damp cloth. Avoid direct heat above 60°C.',
+    shippingInfo: 'Handcrafted on order. Ships within 3-4 days.',
+    tags: ['Resin Art', 'Rose Petals', 'Gold Foil', 'Coasters'],
+    isFeatured: true,
+    isBestseller: true,
+    isNewArrival: false,
+    status: 'active',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'prod-003',
+    slug: 'moonlight-botanical-pillar-candle',
+    name: 'Moonlight Botanical Carved Pillar Candle',
+    category: 'candles',
+    subcategory: 'Pillar Candles',
+    description: 'Exquisite aesthetic pillar candle adorned with embedded dried wildflowers, lavender sprigs, and delicate gold foliage. Unscented or subtly scented to enhance your decor ambiance.',
+    price: 899,
+    salePrice: 899,
+    discountPercent: 0,
+    isSale: false,
+    images: [
+      'https://images.unsplash.com/photo-1596435707659-d89069d67566?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1000&q=80',
+    ],
+    stock: 18,
+    dimensions: '7cm x 12cm height',
+    weight: '320g',
+    materials: 'Soy Blend Wax, Pressed Botanical Flowers, Cotton Wick',
+    fragranceInfo: 'Mild French Lavender & Chamomile',
+    colorOptions: ['Ivory White', 'Sage Green Tint'],
+    careInstructions: 'Place on a heat-resistant candle plate before lighting.',
+    shippingInfo: 'Ships within 2-3 business days.',
+    tags: ['Botanical', 'Pillar Candle', 'New Arrival', 'Aesthetic'],
+    isFeatured: true,
+    isBestseller: false,
+    isNewArrival: true,
+    status: 'active',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'prod-004',
+    slug: 'personalized-resin-bookmark-flower',
+    name: 'Personalized Resin Bookmark with Real Dried Flowers',
+    category: 'customized-products',
+    subcategory: 'Stationery & Keepsakes',
+    description: 'Gorgeous custom resin bookmark featuring real pressed flowers, metallic flakes, and a silky tassel. Personalize it with your name or favorite book quote!',
+    price: 399,
+    salePrice: 299,
+    discountPercent: 25,
+    isSale: true,
+    images: [
+      'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1000&q=80',
+    ],
+    stock: 35,
+    variants: [
+      { id: 'v1', name: 'Gold Flakes + Tassel', price: 399, salePrice: 299, stock: 20 },
+      { id: 'v2', name: 'Silver Flakes + Tassel', price: 399, salePrice: 299, stock: 15 },
+    ],
+    dimensions: '14cm x 2.5cm',
+    weight: '35g',
+    materials: 'Epoxy Resin, Dried Baby\'s Breath & Hydrangeas, Satin Tassel',
+    customizationFields: [
+      { id: 'c1', label: 'Name / Words on Bookmark', type: 'text', required: true, helpText: 'Enter name (e.g. "Harshitha" or "Stay Cozy")' },
+      { id: 'c2', label: 'Font Style', type: 'select', options: ['Calligraphy Script', 'Minimalist Serif', 'Bold Sans'], required: true },
+      { id: 'c3', label: 'Tassel Color', type: 'select', options: ['Cozy Beige', 'Pastel Pink', 'Emerald Green', 'Deep Wine'], required: true }
+    ],
+    careInstructions: 'Handle gently. Do not bend excessively.',
+    shippingInfo: 'Handmade personalized item. Ships in 3 days.',
+    tags: ['Customized', 'Bookmark', 'Gift Idea', 'Budget Friendly'],
+    isFeatured: true,
+    isBestseller: true,
+    isNewArrival: true,
+    status: 'active',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'prod-005',
+    slug: 'ocean-wave-resin-vanity-tray',
+    name: 'Ocean Wave Resin Vanity & Jewelry Tray',
+    category: 'resin-crafts',
+    subcategory: 'Trays & Organization',
+    description: 'A mesmerising hand-poured 3D ocean wave effect tray crafted on natural pine wood & resin. Perfect for organizing perfumes, jewelry, keys, or candles on your nightstand.',
+    price: 1899,
+    salePrice: 1499,
+    discountPercent: 21,
+    isSale: true,
+    images: [
+      'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1000&q=80',
+    ],
+    stock: 7,
+    dimensions: '25cm x 15cm x 2cm',
+    weight: '450g',
+    materials: 'Natural Solid Wood Base, UV-Resistant Epoxy Resin, Real Sea Shell Accents',
+    colorOptions: ['Deep Ocean Blue & White Foam', 'Emerald Beach & Sand'],
+    customizationFields: [
+      { id: 'c1', label: 'Engraved Bottom Plate', type: 'text', required: false, helpText: 'Custom message/date engraved on the wooden back.' }
+    ],
+    careInstructions: 'Clean with damp microfiber cloth. Do not place in dishwasher.',
+    shippingInfo: 'Packed with heavy protective cushioning. Ships in 3-4 days.',
+    tags: ['Ocean Wave', 'Resin Tray', 'Luxury Decor'],
+    isFeatured: true,
+    isBestseller: true,
+    isNewArrival: false,
+    status: 'active',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'prod-006',
+    slug: 'the-ultimate-cozy-gift-box',
+    name: 'The Ultimate Cozy Moonshine Gift Hamper',
+    category: 'gift-sets',
+    subcategory: 'Hampers',
+    description: 'The ultimate luxury gift box containing 1 Vanilla Soy Candle, 2 Rose Resin Coasters, 1 Dried Flower Bookmark, and a handwritten personalized gift card in a wooden gift crate.',
+    price: 2499,
+    salePrice: 1999,
+    discountPercent: 20,
+    isSale: true,
+    images: [
+      'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1000&q=80',
+    ],
+    stock: 10,
+    dimensions: '30cm x 20cm x 12cm',
+    weight: '1.2kg',
+    materials: 'Soy Candle, Resin Crafts, Kraft Gift Box, Silk Ribbon',
+    customizationFields: [
+      { id: 'c1', label: 'Recipient Name', type: 'text', required: true },
+      { id: 'c2', label: 'Handwritten Gift Card Message', type: 'textarea', required: true, helpText: 'We will handwrite your message on our gold foil card.' }
+    ],
+    careInstructions: 'Individual care instructions for each item inside the box.',
+    shippingInfo: 'Includes premium gift packaging & custom ribbon.',
+    tags: ['Gift Set', 'Hamper', 'Festival Gift', 'Best Seller'],
+    isFeatured: true,
+    isBestseller: true,
+    isNewArrival: true,
+    status: 'active',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  }
+];
+
+const initialReviews: Review[] = [
+  {
+    id: 'rev-001',
+    productId: 'prod-001',
+    productName: 'Cozy Vanilla & Warm Amber Soy Candle',
+    orderId: 'ORD-2026-00042',
+    customerName: 'Priya Sharma',
+    rating: 5,
+    comment: 'The scent filled my entire living room within 15 minutes! Smells like a luxury spa. The packaging was so cute and cozy!',
+    images: ['https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=600&q=80'],
+    verifiedPurchase: true,
+    status: 'approved',
+    isFeatured: true,
+    createdAt: '2026-09-15T10:30:00Z',
+  },
+  {
+    id: 'rev-002',
+    productId: 'prod-002',
+    productName: 'Rose Petal & Gold Leaf Resin Coasters',
+    orderId: 'ORD-2026-00055',
+    customerName: 'Ananya Roy',
+    rating: 5,
+    comment: 'Absolutely breathtaking coasters! Everyone who visits asks where I bought these. The gold leaf detailing is so shiny!',
+    images: ['https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=600&q=80'],
+    verifiedPurchase: true,
+    status: 'approved',
+    isFeatured: true,
+    createdAt: '2026-09-20T14:15:00Z',
+  },
+  {
+    id: 'rev-003',
+    productId: 'prod-004',
+    productName: 'Personalized Resin Bookmark with Real Dried Flowers',
+    orderId: 'ORD-2026-00078',
+    customerName: 'Siddharth V.',
+    rating: 5,
+    comment: 'Gifted this personalized bookmark to my sister and she adored it! High quality finish and fast communication.',
+    verifiedPurchase: true,
+    status: 'approved',
+    isFeatured: false,
+    createdAt: '2026-09-25T09:00:00Z',
+  }
+];
+
+const initialOrders: Order[] = [
+  {
+    id: 'ORD-2026-00101',
+    customerName: 'Kavya Reddy',
+    phone: '8341790329',
+    email: 'kavya.reddy@example.com',
+    instagramUsername: '@kavyareddy_art',
+    deliveryAddress: 'Flat 402, Sunshine Apartments, Jubilee Hills',
+    city: 'Hyderabad',
+    state: 'Telangana',
+    pincode: '500033',
+    items: [
+      {
+        productId: 'prod-001',
+        productName: 'Cozy Vanilla & Warm Amber Soy Candle',
+        variantName: 'Standard Jar (180g)',
+        price: 599,
+        quantity: 1,
+        customizationDetails: { 'Custom Lid Message': 'Happy Birthday Kavya!' }
+      },
+      {
+        productId: 'prod-002',
+        productName: 'Rose Petal & Gold Leaf Resin Coasters (Set of 4)',
+        variantName: 'Round (Set of 4)',
+        price: 999,
+        quantity: 1
+      }
+    ],
+    subtotal: 1598,
+    discountTotal: 500,
+    shippingFee: 0,
+    totalAmount: 1598,
+    customerNotes: 'Please wrap with pink ribbon if possible!',
+    giftMessage: 'Wishing you a cozy birthday!',
+    preferredContact: 'WhatsApp',
+    status: 'Confirmed',
+    internalNotes: 'Customer contacted via WhatsApp on Sept 28. Payment confirmed.',
+    statusHistory: [
+      { status: 'New', timestamp: '2026-09-28T10:00:00Z' },
+      { status: 'Contacted', timestamp: '2026-09-28T11:30:00Z', note: 'Sent WhatsApp message' },
+      { status: 'Confirmed', timestamp: '2026-09-28T12:00:00Z', note: 'Customer paid via UPI' }
+    ],
+    createdAt: '2026-09-28T10:00:00Z',
+    updatedAt: '2026-09-28T12:00:00Z'
+  }
+];
+
+const initialSettings: StoreSettings = {
+  businessName: 'The Little Cozy Moonshine',
+  tagline: 'Handcrafted Candles & Artistic Resin Creations',
+  email: 'thecozylittlemoonshine@gmail.com',
+  phone: '8341790329',
+  whatsapp: '7075905496',
+  instagram: 'https://www.instagram.com/thelittlecozymoonshine',
+  currency: 'INR',
+  currencySymbol: '₹',
+  address: 'Hyderabad, Telangana, India',
+  freeShippingThreshold: 1500,
+  defaultShippingFee: 70,
+  adminPasswordHash: 'moonshine2026', // Simple default admin key
+};
+
+function ensureDataFile() {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+
+  if (!fs.existsSync(DB_FILE)) {
+    const defaultDb: DBData = {
+      products: initialProducts,
+      categories: initialCategories,
+      orders: initialOrders,
+      reviews: initialReviews,
+      discounts: [],
+      settings: initialSettings,
+    };
+    fs.writeFileSync(DB_FILE, JSON.stringify(defaultDb, null, 2), 'utf-8');
+  }
+
+  if (!fs.existsSync(EMAILS_FILE)) {
+    fs.writeFileSync(EMAILS_FILE, JSON.stringify([], null, 2), 'utf-8');
+  }
+}
+
+export function getDB(): DBData {
+  ensureDataFile();
+  try {
+    const data = fs.readFileSync(DB_FILE, 'utf-8');
+    return JSON.parse(data) as DBData;
+  } catch (error) {
+    console.error('Error reading db.json:', error);
+    return {
+      products: initialProducts,
+      categories: initialCategories,
+      orders: initialOrders,
+      reviews: initialReviews,
+      discounts: [],
+      settings: initialSettings,
+    };
+  }
+}
+
+export function saveDB(data: DBData): void {
+  ensureDataFile();
+  try {
+    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
+  } catch (error) {
+    console.error('Error writing db.json:', error);
+  }
+}
+
+export function saveSentEmailLog(emailData: any): void {
+  ensureDataFile();
+  try {
+    const existing = JSON.parse(fs.readFileSync(EMAILS_FILE, 'utf-8') || '[]');
+    existing.unshift({
+      id: 'email-' + Date.now(),
+      timestamp: new Date().toISOString(),
+      ...emailData,
+    });
+    fs.writeFileSync(EMAILS_FILE, JSON.stringify(existing, null, 2), 'utf-8');
+  } catch (err) {
+    console.error('Error logging sent email:', err);
+  }
+}
+
+export function getSentEmailLogs(): any[] {
+  ensureDataFile();
+  try {
+    return JSON.parse(fs.readFileSync(EMAILS_FILE, 'utf-8') || '[]');
+  } catch {
+    return [];
+  }
+}
