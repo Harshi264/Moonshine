@@ -3,6 +3,7 @@ import { Playfair_Display, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '@/context/CartContext';
 import { WishlistProvider } from '@/context/WishlistContext';
+import { CustomerAuthProvider } from '@/context/CustomerAuthContext';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 
@@ -62,13 +63,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${playfair.variable} ${jakarta.variable}`}>
       <body className="min-h-screen flex flex-col bg-[#faf7f2] text-[#2d241e] font-sans antialiased">
-        <CartProvider>
-          <WishlistProvider>
-            <Navbar />
-            <main className="flex-grow">{children}</main>
-            <Footer />
-          </WishlistProvider>
-        </CartProvider>
+        <CustomerAuthProvider>
+          <CartProvider>
+            <WishlistProvider>
+              <Navbar />
+              <main className="flex-grow">{children}</main>
+              <Footer />
+            </WishlistProvider>
+          </CartProvider>
+        </CustomerAuthProvider>
       </body>
     </html>
   );

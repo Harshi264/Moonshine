@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
+import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import {
   ShoppingBag,
   Heart,
@@ -15,7 +16,8 @@ import {
   Flame,
   ShieldCheck,
   PhoneCall,
-  UserCheck,
+  User,
+  MessageSquare,
 } from 'lucide-react';
 import { InstagramIcon } from '@/components/InstagramIcon';
 
@@ -26,6 +28,7 @@ export const Navbar = () => {
   const pathname = usePathname();
   const { itemCount } = useCart();
   const { wishlistCount } = useWishlist();
+  const { customer } = useCustomerAuth();
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,19 +52,27 @@ export const Navbar = () => {
   return (
     <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-[#ebdcd0] transition-all">
       {/* Top Announcement Bar */}
-      <div className="bg-[#4a3b32] text-[#f7f3ed] text-xs py-2 px-4 text-center flex justify-between items-center overflow-x-auto">
+      <div className="bg-[#4a3b32] text-[#f7f3ed] text-xs py-2 px-4 flex justify-between items-center overflow-x-auto">
         <div className="flex items-center space-x-2 mx-auto text-xs sm:text-sm font-medium">
           <Sparkles className="w-3.5 h-3.5 text-[#e6c594] animate-pulse" />
-          <span>Handcrafted Soy Candles & Artisanal Resin Crafts • Free Shipping above ₹1500!</span>
-          <span className="hidden sm:inline-block text-[#e6c594]">• 100% Eco-Friendly & Handmade</span>
+          <span>Handcrafted Soy Candles & Artisanal Resin Crafts • Free Shipping above ₹1000!</span>
         </div>
-        <div className="hidden md:flex items-center space-x-4 text-xs">
+        <div className="hidden lg:flex items-center space-x-4 text-xs shrink-0">
           <a
             href="tel:8341790329"
             className="flex items-center space-x-1 hover:text-[#e6c594] transition-colors"
           >
-            <PhoneCall className="w-3 h-3" />
+            <PhoneCall className="w-3 h-3 text-[#e6c594]" />
             <span>8341790329</span>
+          </a>
+          <a
+            href="https://wa.me/917075905496"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center space-x-1 hover:text-[#25D366] transition-colors"
+          >
+            <MessageSquare className="w-3 h-3 text-[#25D366]" />
+            <span>7075905496</span>
           </a>
           <a
             href="https://www.instagram.com/thelittlecozymoonshine"
@@ -125,7 +136,7 @@ export const Navbar = () => {
           </nav>
 
           {/* Right Action Buttons */}
-          <div className="flex items-center space-x-2 sm:space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-3">
             {/* Search Icon */}
             <button
               onClick={() => setSearchOpen(!searchOpen)}
@@ -134,6 +145,15 @@ export const Navbar = () => {
             >
               <Search className="w-5 h-5" />
             </button>
+
+            {/* Customer Account Icon */}
+            <Link
+              href={customer ? '/account' : '/login'}
+              className="p-2 text-[#4a3b32] hover:text-[#b87333] rounded-full hover:bg-[#f9f3ec] transition-colors flex items-center"
+              title={customer ? `Account (${customer.name})` : 'Customer Login'}
+            >
+              <User className={`w-5 h-5 ${customer ? 'text-[#b87333] fill-[#b87333]/20' : ''}`} />
+            </Link>
 
             {/* Wishlist Icon */}
             <Link
@@ -163,7 +183,7 @@ export const Navbar = () => {
               )}
             </Link>
 
-            {/* Admin Dashboard link (discrete badge) */}
+            {/* Admin Dashboard link */}
             <Link
               href="/admin/login"
               className="hidden sm:flex items-center space-x-1 text-xs text-[#7a6858] hover:text-[#4a3b32] bg-[#f5eee6] hover:bg-[#ebdcd0] px-2.5 py-1 rounded-full border border-[#d6c8b8] transition-colors"
@@ -184,7 +204,7 @@ export const Navbar = () => {
                 placeholder="Search soy candles, resin coasters, custom gift hampers..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-24 py-2.5 bg-[#faf7f2] border border-[#d6c8b8] rounded-full text-sm text-[#3b2d24] placeholder-[#8c7868] focus:outline-none focus:ring-2 focus:ring-[#b87333]"
+                className="w-full pl-10 pr-24 py-2.5 bg-[#faf7f2] border border-[#d6c8b8] rounded-full text-sm text-[#3b2d24] focus:outline-none focus:ring-2 focus:ring-[#b87333]"
                 autoFocus
               />
               <Search className="absolute left-3.5 w-4 h-4 text-[#8c7868]" />
@@ -213,6 +233,14 @@ export const Navbar = () => {
             </Link>
           ))}
           <div className="pt-4 border-t border-[#d6c8b8] flex flex-col space-y-2">
+            <Link
+              href={customer ? '/account' : '/login'}
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center space-x-2 text-sm text-[#b87333] font-bold py-1.5"
+            >
+              <User className="w-4 h-4" />
+              <span>{customer ? `My Account (${customer.name})` : 'Customer Login'}</span>
+            </Link>
             <a
               href="https://www.instagram.com/thelittlecozymoonshine"
               target="_blank"
@@ -220,7 +248,7 @@ export const Navbar = () => {
               className="flex items-center space-x-2 text-sm text-[#8c5e3c] font-semibold py-1.5"
             >
               <InstagramIcon className="w-4 h-4" />
-              <span>Follow us on Instagram @thelittlecozymoonshine</span>
+              <span>Follow us @thelittlecozymoonshine</span>
             </a>
             <Link
               href="/admin/login"

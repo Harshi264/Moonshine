@@ -80,7 +80,7 @@
         "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1000&q=80",
         "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1000&q=80"
       ],
-      "stock": 12,
+      "stock": 11,
       "variants": [
         {
           "id": "v1",
@@ -143,7 +143,7 @@
         "https://images.unsplash.com/photo-1596435707659-d89069d67566?auto=format&fit=crop&w=1000&q=80",
         "https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1000&q=80"
       ],
-      "stock": 18,
+      "stock": 17,
       "dimensions": "7cm x 12cm height",
       "weight": "320g",
       "materials": "Soy Blend Wax, Pressed Botanical Flowers, Cotton Wick",
@@ -391,6 +391,80 @@
   ],
   "orders": [
     {
+      "id": "ORD-2026-41650",
+      "customerName": "Gujjula Harshitha Reddy",
+      "phone": "8341790329",
+      "email": "harshithareddyg264@gmail.com",
+      "deliveryAddress": "503, Konatham IV Apartments, Huzurnagar",
+      "city": "Huzurnagar",
+      "state": "Telangana",
+      "pincode": "508204",
+      "items": [
+        {
+          "productId": "prod-003",
+          "productName": "Moonlight Botanical Carved Pillar Candle",
+          "productImage": "https://images.unsplash.com/photo-1596435707659-d89069d67566?auto=format&fit=crop&w=1000&q=80",
+          "price": 899,
+          "quantity": 1,
+          "customizationDetails": {}
+        }
+      ],
+      "subtotal": 899,
+      "discountTotal": 0,
+      "shippingFee": 70,
+      "totalAmount": 969,
+      "customerNotes": "Happy birthday ",
+      "giftMessage": "Happy birthday ",
+      "preferredContact": "Email",
+      "status": "New",
+      "statusHistory": [
+        {
+          "status": "New",
+          "timestamp": "2026-09-29T19:14:22.244Z",
+          "note": "Order submitted by customer"
+        }
+      ],
+      "createdAt": "2026-09-29T19:14:22.244Z",
+      "updatedAt": "2026-09-29T19:14:22.244Z"
+    },
+    {
+      "id": "ORD-2026-15835",
+      "customerName": "Gujjula Harshitha Reddy",
+      "phone": "8341790329",
+      "email": "harshithareddyg264@gmail.com",
+      "deliveryAddress": "503, Konatham IV Apartments, Huzurnagar",
+      "city": "Huzurnagar",
+      "state": "Telangana",
+      "pincode": "508204",
+      "items": [
+        {
+          "productId": "prod-002",
+          "productName": "Rose Petal & Gold Leaf Resin Coasters (Set of 4)",
+          "productImage": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1000&q=80",
+          "price": 999,
+          "quantity": 1,
+          "customizationDetails": {}
+        }
+      ],
+      "subtotal": 999,
+      "discountTotal": 300,
+      "shippingFee": 70,
+      "totalAmount": 1069,
+      "customerNotes": "Best mom",
+      "giftMessage": "Happy birthday ",
+      "preferredContact": "Phone",
+      "status": "New",
+      "statusHistory": [
+        {
+          "status": "New",
+          "timestamp": "2026-09-29T12:07:53.608Z",
+          "note": "Order submitted by customer"
+        }
+      ],
+      "createdAt": "2026-09-29T12:07:53.608Z",
+      "updatedAt": "2026-09-29T12:07:53.608Z"
+    },
+    {
       "id": "ORD-2026-00101",
       "customerName": "Kavya Reddy",
       "phone": "8341790329",
@@ -509,5 +583,6 @@
     "freeShippingThreshold": 1500,
     "defaultShippingFee": 70,
     "adminPasswordHash": "moonshine2026"
-  }
+  },
+  "customers": []
 }

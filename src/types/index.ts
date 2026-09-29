@@ -1,6 +1,6 @@
 export interface ProductVariant {
   id: string;
-  name: string; // e.g. "Lavender - 150g" or "Rose Gold Foil"
+  name: string;
   price: number;
   salePrice?: number;
   stock: number;
@@ -9,9 +9,9 @@ export interface ProductVariant {
 
 export interface CustomizationOption {
   id: string;
-  label: string; // e.g., "Custom Name / Text", "Fragrance Choice", "Foil Color"
+  label: string;
   type: 'text' | 'select' | 'color' | 'textarea';
-  options?: string[]; // for 'select' type
+  options?: string[];
   required: boolean;
   helpText?: string;
 }
@@ -20,15 +20,15 @@ export interface Product {
   id: string;
   slug: string;
   name: string;
-  category: string; // Category ID or name
+  category: string;
   subcategory?: string;
   description: string;
-  price: number; // Original price
-  salePrice?: number; // Discounted price
-  discountPercent?: number; // Calculated or manual discount %
+  price: number;
+  salePrice?: number;
+  discountPercent?: number;
   isSale?: boolean;
   images: string[];
-  stock: number; // Available quantity
+  stock: number;
   variants?: ProductVariant[];
   dimensions?: string;
   weight?: string;
@@ -77,7 +77,8 @@ export type OrderStatus =
   | 'Cancelled';
 
 export interface Order {
-  id: string; // e.g., ORD-2026-00125
+  id: string; // e.g. ORD-2026-00125
+  customerId?: string;
   customerName: string;
   phone: string;
   email: string;
@@ -108,7 +109,7 @@ export interface Review {
   orderId?: string;
   customerName: string;
   customerEmail?: string;
-  rating: number; // 1 to 5
+  rating: number;
   comment: string;
   images?: string[];
   verifiedPurchase: boolean;
@@ -121,12 +122,26 @@ export interface Discount {
   id: string;
   title: string;
   targetType: 'product' | 'category' | 'all';
-  targetId?: string; // Product ID or Category ID
+  targetId?: string;
   discountPercent: number;
   startDate?: string;
   endDate?: string;
   isActive: boolean;
   code?: string;
+}
+
+export interface CustomerUser {
+  id: string;
+  name: string;
+  email?: string;
+  phone: string;
+  savedAddress?: {
+    deliveryAddress: string;
+    city: string;
+    state: string;
+    pincode: string;
+  };
+  createdAt: string;
 }
 
 export interface StoreSettings {

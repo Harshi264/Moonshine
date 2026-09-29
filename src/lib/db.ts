@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { Product, Category, Order, Review, Discount, StoreSettings } from '@/types';
+import { Product, Category, Order, Review, Discount, CustomerUser, StoreSettings } from '@/types';
 
 const DATA_DIR = path.join(process.cwd(), 'src', 'data');
 const DB_FILE = path.join(DATA_DIR, 'db.json');
@@ -12,6 +12,7 @@ export interface DBData {
   orders: Order[];
   reviews: Review[];
   discounts: Discount[];
+  customers: CustomerUser[];
   settings: StoreSettings;
 }
 
@@ -370,14 +371,14 @@ const initialSettings: StoreSettings = {
   tagline: 'Handcrafted Candles & Artistic Resin Creations',
   email: 'thecozylittlemoonshine@gmail.com',
   phone: '8341790329',
-  whatsapp: '7075905496',
+  whatsapp: '8341790329 / 7075905496',
   instagram: 'https://www.instagram.com/thelittlecozymoonshine',
   currency: 'INR',
   currencySymbol: '₹',
   address: 'Hyderabad, Telangana, India',
-  freeShippingThreshold: 1500,
+  freeShippingThreshold: 1000,
   defaultShippingFee: 70,
-  adminPasswordHash: 'moonshine2026', // Simple default admin key
+  adminPasswordHash: 'moonshine2026',
 };
 
 function ensureDataFile() {
@@ -392,6 +393,7 @@ function ensureDataFile() {
       orders: initialOrders,
       reviews: initialReviews,
       discounts: [],
+      customers: [],
       settings: initialSettings,
     };
     fs.writeFileSync(DB_FILE, JSON.stringify(defaultDb, null, 2), 'utf-8');
@@ -406,7 +408,9 @@ export function getDB(): DBData {
   ensureDataFile();
   try {
     const data = fs.readFileSync(DB_FILE, 'utf-8');
-    return JSON.parse(data) as DBData;
+    const parsed = JSON.parse(data) as DBData;
+    if (!parsed.customers) parsed.customers = [];
+    return parsed;
   } catch (error) {
     console.error('Error reading db.json:', error);
     return {
@@ -415,6 +419,7 @@ export function getDB(): DBData {
       orders: initialOrders,
       reviews: initialReviews,
       discounts: [],
+      customers: [],
       settings: initialSettings,
     };
   }

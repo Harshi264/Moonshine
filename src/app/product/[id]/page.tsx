@@ -212,11 +212,73 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             {product.description}
           </p>
 
+          {/* Fragrance Selector */}
+          <div className="space-y-2">
+            <label className="block text-xs font-bold text-[#4a3b32] uppercase tracking-wider flex items-center space-x-1.5">
+              <Flame className="w-3.5 h-3.5 text-[#b87333]" />
+              <span>Select Fragrance Note:</span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {(
+                product.fragranceInfo
+                  ? product.fragranceInfo.split('|').map((s) => s.trim())
+                  : ['Cozy Vanilla & Amber', 'French Lavender & Chamomile', 'Spiced Cinnamon Apple', 'Unscented']
+              ).map((frag) => {
+                const isSelected = customizationValues['Fragrance'] === frag;
+                return (
+                  <button
+                    key={frag}
+                    type="button"
+                    onClick={() => handleCustomizationChange('Fragrance', frag)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+                      isSelected
+                        ? 'bg-[#b87333] text-white border-[#b87333] shadow-sm'
+                        : 'bg-white text-[#4a3b32] border-[#d6c8b8] hover:bg-[#f5eee6]'
+                    }`}
+                  >
+                    🌸 {frag}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Color Option Selector */}
+          <div className="space-y-2">
+            <label className="block text-xs font-bold text-[#4a3b32] uppercase tracking-wider flex items-center space-x-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-[#b87333]" />
+              <span>Select Color / Foil Accent:</span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {(
+                product.colorOptions && product.colorOptions.length > 0
+                  ? product.colorOptions
+                  : ['Warm Amber Jar', 'Ivory White', 'Rose Gold Foil', 'Ocean Blue', 'Emerald Green']
+              ).map((col) => {
+                const isSelected = customizationValues['Color'] === col;
+                return (
+                  <button
+                    key={col}
+                    type="button"
+                    onClick={() => handleCustomizationChange('Color', col)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+                      isSelected
+                        ? 'bg-[#4a3b32] text-white border-[#4a3b32] shadow-sm'
+                        : 'bg-white text-[#4a3b32] border-[#d6c8b8] hover:bg-[#f5eee6]'
+                    }`}
+                  >
+                    🎨 {col}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Variant Selector */}
           {product.variants && product.variants.length > 0 && (
             <div className="space-y-2">
               <label className="block text-xs font-bold text-[#4a3b32] uppercase tracking-wider">
-                Select Option / Size:
+                Select Size / Jar Option:
               </label>
               <div className="flex flex-wrap gap-2">
                 {product.variants.map((v) => (

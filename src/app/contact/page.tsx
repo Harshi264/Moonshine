@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, MessageSquare, Send, CheckCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, MessageSquare, Send, CheckCircle, Flame } from 'lucide-react';
 import { InstagramIcon } from '@/components/InstagramIcon';
 
 export default function ContactPage() {
@@ -37,27 +37,57 @@ export default function ContactPage() {
           </div>
 
           <div className="space-y-6 text-sm">
+            {/* Phone Number 1 */}
             <div className="flex items-start space-x-4">
               <div className="w-10 h-10 rounded-full bg-[#b87333] flex items-center justify-center shrink-0">
                 <Phone className="w-5 h-5 text-white" />
               </div>
               <div>
-                <div className="text-xs text-[#e6c594] uppercase font-bold">Call / Phone Support</div>
+                <div className="text-xs text-[#e6c594] uppercase font-bold">Call / Phone Support 1</div>
                 <a href="tel:8341790329" className="text-base font-bold text-white hover:text-[#e6c594] transition-colors block mt-0.5">
                   📞 8341790329
                 </a>
+              </div>
+            </div>
+
+            {/* Phone Number 2 */}
+            <div className="flex items-start space-x-4">
+              <div className="w-10 h-10 rounded-full bg-[#b87333] flex items-center justify-center shrink-0">
+                <Phone className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <div className="text-xs text-[#e6c594] uppercase font-bold">Call / Phone Support 2</div>
                 <a href="tel:7075905496" className="text-base font-bold text-white hover:text-[#e6c594] transition-colors block mt-0.5">
                   📞 7075905496
                 </a>
               </div>
             </div>
 
+            {/* WhatsApp Direct 1 */}
             <div className="flex items-start space-x-4">
               <div className="w-10 h-10 rounded-full bg-[#25D366] flex items-center justify-center shrink-0">
                 <MessageSquare className="w-5 h-5 text-white" />
               </div>
               <div>
-                <div className="text-xs text-[#e6c594] uppercase font-bold">WhatsApp Direct Chat</div>
+                <div className="text-xs text-[#e6c594] uppercase font-bold">WhatsApp Direct Line 1</div>
+                <a
+                  href="https://wa.me/918341790329?text=Hi!%20I%20have%20an%20inquiry%20regarding%20your%20candles/resin%20crafts."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-base font-bold text-white hover:text-[#25D366] transition-colors block mt-0.5"
+                >
+                  💬 Chat on WhatsApp (8341790329)
+                </a>
+              </div>
+            </div>
+
+            {/* WhatsApp Direct 2 */}
+            <div className="flex items-start space-x-4">
+              <div className="w-10 h-10 rounded-full bg-[#25D366] flex items-center justify-center shrink-0">
+                <MessageSquare className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <div className="text-xs text-[#e6c594] uppercase font-bold">WhatsApp Direct Line 2</div>
                 <a
                   href="https://wa.me/917075905496?text=Hi!%20I%20have%20an%20inquiry%20regarding%20your%20candles/resin%20crafts."
                   target="_blank"
@@ -69,6 +99,7 @@ export default function ContactPage() {
               </div>
             </div>
 
+            {/* Business Email */}
             <div className="flex items-start space-x-4">
               <div className="w-10 h-10 rounded-full bg-[#b87333] flex items-center justify-center shrink-0">
                 <Mail className="w-5 h-5 text-white" />
@@ -81,6 +112,7 @@ export default function ContactPage() {
               </div>
             </div>
 
+            {/* Instagram */}
             <div className="flex items-start space-x-4">
               <div className="w-10 h-10 rounded-full bg-[#dc2743] flex items-center justify-center shrink-0">
                 <InstagramIcon className="w-5 h-5 text-white" />

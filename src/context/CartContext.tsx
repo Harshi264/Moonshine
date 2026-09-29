@@ -40,7 +40,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  const freeShippingThreshold = 1500;
+  const freeShippingThreshold = 1000;
   const defaultShippingFee = 70;
 
   // Load cart from localStorage

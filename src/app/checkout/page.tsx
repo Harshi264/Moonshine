@@ -14,11 +14,16 @@ import {
   ShoppingBag,
   Sparkles,
   Gift,
+  CreditCard,
+  QrCode,
+  Copy,
+  Check,
 } from 'lucide-react';
 
 export default function CheckoutPage() {
   const { cart, subtotal, discountTotal, shippingFee, total, clearCart } = useCart();
 
+  const [paymentMethod, setPaymentMethod] = useState<'request' | 'razorpay'>('request');
   const [formData, setFormData] = useState({
     customerName: '',
     phone: '',
@@ -36,9 +41,16 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [submittedOrder, setSubmittedOrder] = useState<any>(null);
+  const [upiCopied, setUpiCopied] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const copyUpi = (upiId: string) => {
+    navigator.clipboard.writeText(upiId);
+    setUpiCopied(true);
+    setTimeout(() => setUpiCopied(false), 2000);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -74,6 +86,7 @@ export default function CheckoutPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
+          paymentMethod,
           items,
         }),
       });
@@ -83,10 +96,9 @@ export default function CheckoutPage() {
       if (data.success && data.order) {
         setSubmittedOrder(data.order);
         clearCart();
-        // Trigger celebratory confetti
         confetti({
-          particleCount: 100,
-          spread: 70,
+          particleCount: 120,
+          spread: 80,
           origin: { y: 0.6 },
         });
       } else {
@@ -110,13 +122,13 @@ export default function CheckoutPage() {
 
           <div>
             <span className="bg-[#f5eee6] text-[#b87333] text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
-              Order Request Received!
+              Order Confirmed & Email Receipt Sent!
             </span>
             <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#3b2d24] mt-2">
               Thank You, {submittedOrder.customerName}!
             </h1>
             <p className="text-sm text-[#7a6858] mt-2 max-w-md mx-auto">
-              Your order request has been submitted successfully to <strong>The Little Cozy Moonshine</strong> studio.
+              Your order has been submitted to <strong>The Little Cozy Moonshine</strong>. An email receipt has been sent to <strong>{submittedOrder.email}</strong>.
             </p>
           </div>
 
@@ -132,35 +144,45 @@ export default function CheckoutPage() {
           {/* Info Card */}
           <div className="bg-[#f5eee6] p-6 rounded-2xl border border-[#ebdcd0] text-left text-xs sm:text-sm space-y-2 text-[#4a3b32]">
             <h3 className="font-serif font-bold text-base text-[#3b2d24] border-b border-[#ebdcd0] pb-2">
-              What Happens Next?
+              Order Details & Next Steps
             </h3>
             <p className="leading-relaxed">
-              1. Our studio owner will review your order details and check stock / customization requirements.
+              1. Our studio team is preparing your candle & resin creations.
             </p>
             <p className="leading-relaxed">
-              2. We will contact you shortly via <strong>{submittedOrder.preferredContact || 'WhatsApp'}</strong> ({submittedOrder.phone}) to confirm payment, custom details, and delivery date.
-            </p>
-            <p className="leading-relaxed">
-              3. Once confirmed, your candles/crafts will be prepared with love and dispatched to your address!
+              2. We will contact you via <strong>{submittedOrder.preferredContact || 'WhatsApp'}</strong> ({submittedOrder.phone}) to confirm delivery date!
             </p>
           </div>
 
-          {/* Action CTAs */}
+          {/* Dual WhatsApp Action Buttons */}
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
             <a
               href={`https://wa.me/918341790329?text=${encodeURIComponent(
-                `Hi! I just placed an order request on your website. My Order ID is ${submittedOrder.id}.`
+                `Hi! I placed Order ${submittedOrder.id} on your website.`
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto px-7 py-3.5 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs rounded-full shadow flex items-center justify-center space-x-2"
+              className="w-full sm:w-auto px-6 py-3 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs rounded-full shadow flex items-center justify-center space-x-1.5"
             >
               <MessageSquare className="w-4 h-4" />
-              <span>Connect on WhatsApp (8341790329)</span>
+              <span>WhatsApp 1: 8341790329</span>
             </a>
+
+            <a
+              href={`https://wa.me/917075905496?text=${encodeURIComponent(
+                `Hi! I placed Order ${submittedOrder.id} on your website.`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto px-6 py-3 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs rounded-full shadow flex items-center justify-center space-x-1.5"
+            >
+              <MessageSquare className="w-4 h-4" />
+              <span>WhatsApp 2: 7075905496</span>
+            </a>
+
             <Link
               href="/catalogue"
-              className="w-full sm:w-auto px-7 py-3.5 bg-[#4a3b32] hover:bg-[#b87333] text-white font-bold text-xs rounded-full shadow flex items-center justify-center"
+              className="w-full sm:w-auto px-6 py-3 bg-[#4a3b32] text-white font-bold text-xs rounded-full shadow flex items-center justify-center"
             >
               Back to Shop
             </Link>
@@ -176,19 +198,11 @@ export default function CheckoutPage() {
       {/* Header */}
       <div className="text-center max-w-xl mx-auto space-y-2">
         <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#3b2d24]">
-          Checkout & Order Request
+          Checkout & Order Confirmation
         </h1>
         <p className="text-xs sm:text-sm text-[#7a6858]">
-          No online payment is charged now. Enter your delivery details below to submit your request.
+          Free Express Shipping on orders above <strong>₹1000</strong>!
         </p>
-      </div>
-
-      {/* Zero Payment Info Banner */}
-      <div className="bg-[#f5eee6] border-2 border-dashed border-[#b87333] p-4 rounded-2xl flex items-center space-x-3 text-xs sm:text-sm text-[#4a3b32]">
-        <ShieldCheck className="w-6 h-6 text-[#b87333] shrink-0" />
-        <div>
-          <strong className="text-[#3b2d24]">Personalized Studio Confirmation:</strong> You will NOT be asked for online card details. After submitting, we will reach out to you personally to confirm payment & delivery timelines.
-        </div>
       </div>
 
       {error && (
@@ -200,10 +214,10 @@ export default function CheckoutPage() {
       {/* Main Checkout Grid */}
       <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* Left Customer Details Form */}
+        {/* Left Form */}
         <div className="lg:col-span-2 bg-white p-6 sm:p-8 rounded-3xl border border-[#ebdcd0] shadow-sm space-y-6">
           <h2 className="font-serif text-xl font-bold text-[#3b2d24] border-b border-[#ebdcd0] pb-3 flex items-center space-x-2">
-            <span>1. Contact & Delivery Information</span>
+            <span>1. Contact & Delivery Address</span>
             <span className="text-xs text-red-500 font-sans font-normal">* Required</span>
           </h2>
 
@@ -217,12 +231,12 @@ export default function CheckoutPage() {
                 placeholder="e.g. Kavya Reddy"
                 value={formData.customerName}
                 onChange={handleChange}
-                className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24] focus:outline-none focus:ring-2 focus:ring-[#b87333]"
+                className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#4a3b32] mb-1">Phone / Mobile Number *</label>
+              <label className="block text-xs font-bold text-[#4a3b32] mb-1">Phone Number *</label>
               <input
                 type="tel"
                 name="phone"
@@ -230,7 +244,7 @@ export default function CheckoutPage() {
                 placeholder="e.g. 8341790329"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24] focus:outline-none focus:ring-2 focus:ring-[#b87333]"
+                className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24]"
               />
             </div>
 
@@ -243,7 +257,7 @@ export default function CheckoutPage() {
                 placeholder="e.g. kavya@example.com"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24] focus:outline-none focus:ring-2 focus:ring-[#b87333]"
+                className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24]"
               />
             </div>
 
@@ -252,10 +266,10 @@ export default function CheckoutPage() {
               <input
                 type="text"
                 name="instagramUsername"
-                placeholder="e.g. @kavya_studio"
+                placeholder="e.g. @kavya_art"
                 value={formData.instagramUsername}
                 onChange={handleChange}
-                className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24] focus:outline-none focus:ring-2 focus:ring-[#b87333]"
+                className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24]"
               />
             </div>
           </div>
@@ -269,7 +283,7 @@ export default function CheckoutPage() {
               placeholder="House/Flat No., Building Name, Street Name, Landmark"
               value={formData.deliveryAddress}
               onChange={handleChange}
-              className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24] focus:outline-none focus:ring-2 focus:ring-[#b87333]"
+              className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24]"
             />
           </div>
 
@@ -283,7 +297,7 @@ export default function CheckoutPage() {
                 placeholder="e.g. Hyderabad"
                 value={formData.city}
                 onChange={handleChange}
-                className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24] focus:outline-none focus:ring-2 focus:ring-[#b87333]"
+                className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24]"
               />
             </div>
 
@@ -296,7 +310,7 @@ export default function CheckoutPage() {
                 placeholder="e.g. Telangana"
                 value={formData.state}
                 onChange={handleChange}
-                className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24] focus:outline-none focus:ring-2 focus:ring-[#b87333]"
+                className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24]"
               />
             </div>
 
@@ -309,37 +323,94 @@ export default function CheckoutPage() {
                 placeholder="e.g. 500033"
                 value={formData.pincode}
                 onChange={handleChange}
-                className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24] focus:outline-none focus:ring-2 focus:ring-[#b87333]"
+                className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24]"
               />
             </div>
           </div>
 
-          <h2 className="font-serif text-xl font-bold text-[#3b2d24] border-b border-[#ebdcd0] pb-3 pt-4 flex items-center space-x-2">
-            <span>2. Optional Customization & Preferences</span>
+          {/* Payment Method Selector */}
+          <h2 className="font-serif text-xl font-bold text-[#3b2d24] border-b border-[#ebdcd0] pb-3 pt-4">
+            2. Payment Method
           </h2>
 
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div
+              onClick={() => setPaymentMethod('request')}
+              className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
+                paymentMethod === 'request'
+                  ? 'border-[#b87333] bg-[#f5eee6]'
+                  : 'border-[#ebdcd0] bg-[#faf7f2] hover:bg-[#f5eee6]/50'
+              }`}
+            >
+              <div className="flex items-center space-x-2 text-sm font-bold text-[#3b2d24]">
+                <Phone className="w-4 h-4 text-[#b87333]" />
+                <span>Order Request (Pay Later / Call)</span>
+              </div>
+              <p className="text-[11px] text-[#7a6858] mt-1">
+                Submit order without online payment. We call/WhatsApp you to confirm order & UPI/COD payment.
+              </p>
+            </div>
+
+            <div
+              onClick={() => setPaymentMethod('razorpay')}
+              className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
+                paymentMethod === 'razorpay'
+                  ? 'border-[#b87333] bg-[#f5eee6]'
+                  : 'border-[#ebdcd0] bg-[#faf7f2] hover:bg-[#f5eee6]/50'
+              }`}
+            >
+              <div className="flex items-center space-x-2 text-sm font-bold text-[#3b2d24]">
+                <CreditCard className="w-4 h-4 text-[#b87333]" />
+                <span>Online Payment (UPI / Razorpay / Cards)</span>
+              </div>
+              <p className="text-[11px] text-[#7a6858] mt-1">
+                Instant UPI / Credit Card payment via Razorpay secure gateway.
+              </p>
+            </div>
+          </div>
+
+          {/* If Razorpay / UPI chosen, show instant UPI ID copy details */}
+          {paymentMethod === 'razorpay' && (
+            <div className="bg-[#fff9e6] p-4 rounded-2xl border border-[#ffe599] space-y-2 text-xs text-[#3b2d24]">
+              <div className="flex items-center space-x-2 font-bold text-[#b87333]">
+                <QrCode className="w-4 h-4" />
+                <span>Instant Studio UPI Payment Handles:</span>
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => copyUpi('8341790329@okicici')}
+                  className="px-3 py-1.5 bg-white border border-[#d6c8b8] rounded-lg font-bold flex items-center space-x-1 hover:bg-[#f5eee6]"
+                >
+                  <span>UPI 1: 8341790329@okicici</span>
+                  {upiCopied ? <Check className="w-3.5 h-3.5 text-[#2e7d32]" /> : <Copy className="w-3.5 h-3.5 text-[#8c7868]" />}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => copyUpi('7075905496@ybl')}
+                  className="px-3 py-1.5 bg-white border border-[#d6c8b8] rounded-lg font-bold flex items-center space-x-1 hover:bg-[#f5eee6]"
+                >
+                  <span>UPI 2: 7075905496@ybl</span>
+                  {upiCopied ? <Check className="w-3.5 h-3.5 text-[#2e7d32]" /> : <Copy className="w-3.5 h-3.5 text-[#8c7868]" />}
+                </button>
+              </div>
+            </div>
+          )}
+
+          <h2 className="font-serif text-xl font-bold text-[#3b2d24] border-b border-[#ebdcd0] pb-3 pt-2">
+            3. Special Notes & Contact Preference
+          </h2>
+
+          <div className="space-y-3">
             <div>
-              <label className="block text-xs font-bold text-[#4a3b32] mb-1">Customization Requirements / Notes</label>
+              <label className="block text-xs font-bold text-[#4a3b32] mb-1">Customization / Delivery Notes</label>
               <textarea
                 name="customerNotes"
                 rows={2}
-                placeholder="Specify names, custom scents, foil colors, or packaging requests..."
+                placeholder="Add special instructions, custom scents, or gift notes..."
                 value={formData.customerNotes}
                 onChange={handleChange}
-                className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24] focus:outline-none focus:ring-2 focus:ring-[#b87333]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-[#4a3b32] mb-1">Gift Card Message (If sending as gift)</label>
-              <input
-                type="text"
-                name="giftMessage"
-                placeholder="Message to write on gift card..."
-                value={formData.giftMessage}
-                onChange={handleChange}
-                className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24] focus:outline-none focus:ring-2 focus:ring-[#b87333]"
+                className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24]"
               />
             </div>
 
@@ -349,7 +420,7 @@ export default function CheckoutPage() {
                 name="preferredContact"
                 value={formData.preferredContact}
                 onChange={handleChange}
-                className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24] focus:outline-none focus:ring-2 focus:ring-[#b87333]"
+                className="w-full p-3 bg-[#faf7f2] border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24]"
               >
                 <option value="WhatsApp">WhatsApp Message</option>
                 <option value="Phone">Phone Call</option>
@@ -360,7 +431,7 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        {/* Right Order Summary Column */}
+        {/* Right Summary Column */}
         <div className="space-y-6">
           <div className="bg-white p-6 rounded-3xl border border-[#ebdcd0] shadow-sm space-y-4">
             <h2 className="font-serif text-xl font-bold text-[#3b2d24] border-b border-[#ebdcd0] pb-3">
@@ -398,7 +469,7 @@ export default function CheckoutPage() {
               <div className="flex justify-between">
                 <span>Shipping Fee</span>
                 <span className="font-bold text-[#3b2d24]">
-                  {shippingFee === 0 ? <span className="text-[#2e7d32]">FREE</span> : `₹${shippingFee}`}
+                  {shippingFee === 0 ? <span className="text-[#2e7d32]">FREE (₹1000+)</span> : `₹${shippingFee}`}
                 </span>
               </div>
 
@@ -414,17 +485,17 @@ export default function CheckoutPage() {
               className="w-full py-4 bg-[#4a3b32] hover:bg-[#b87333] text-white font-bold text-sm rounded-full shadow-lg flex items-center justify-center space-x-2 transition-all transform hover:-translate-y-0.5 disabled:opacity-50"
             >
               {loading ? (
-                <span>Submitting Request...</span>
+                <span>Submitting Order...</span>
               ) : (
                 <>
-                  <span>Submit Order Request</span>
+                  <span>Submit Order ({paymentMethod === 'razorpay' ? 'Razorpay / Online' : 'Pay Later'})</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
             </button>
 
             <p className="text-[11px] text-[#8c7868] text-center italic">
-              By submitting, your order request is logged & emailed to our studio. We will contact you shortly!
+              Order receipt will be emailed immediately to your email address!
             </p>
           </div>
         </div>
