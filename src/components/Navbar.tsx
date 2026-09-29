@@ -66,13 +66,13 @@ export const Navbar = () => {
             <span>8341790329</span>
           </a>
           <a
-            href="https://wa.me/917075905496"
+            href="https://wa.me/918341790329"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center space-x-1 hover:text-[#25D366] transition-colors"
           >
             <MessageSquare className="w-3 h-3 text-[#25D366]" />
-            <span>7075905496</span>
+            <span>8341790329</span>
           </a>
           <a
             href="https://www.instagram.com/thelittlecozymoonshine"

@@ -231,7 +231,7 @@ export async function sendCustomerOrderReceiptEmail(order: Order): Promise<{ suc
 
           <div style="text-align: center; margin-top: 30px; padding: 16px; background-color: #faf7f2; border-radius: 8px;">
             <p style="margin: 0 0 10px 0; font-size: 13px; color: #666;">Need to add custom notes or ask a question?</p>
-            <a href="https://wa.me/917075905496?text=Hi!%20I%20have%20a%20question%20regarding%20my%20Order%20${order.id}" target="_blank" style="display: inline-block; background-color: #25D366; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; font-size: 13px;">💬 Chat with Studio on WhatsApp</a>
+            <a href="https://wa.me/918341790329?text=Hi!%20I%20have%20a%20question%20regarding%20my%20Order%20${order.id}" target="_blank" style="display: inline-block; background-color: #25D366; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; font-size: 13px;">💬 Chat with Studio on WhatsApp (8341790329)</a>
           </div>
         </div>
 
@@ -298,7 +298,7 @@ export async function sendCustomerStatusUpdateEmail(
           <div style="background-color: #e8f5e9; border: 1px solid #c8e6c9; padding: 16px; border-radius: 8px; text-align: center; margin-bottom: 20px;">
             <strong style="color: #2e7d32; font-size: 15px;">Enjoy your handmade creations? 🌸</strong>
             <p style="margin: 6px 0 12px 0; font-size: 13px; color: #444;">We'd love to hear your feedback! Click below to write a review & upload a picture of your candles/resin decor:</p>
-            <a href="http://localhost:3000/review?orderId=${order.id}" target="_blank" style="display: inline-block; background-color: #4a3b32; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; font-size: 13px;">Write a Product Review</a>
+            <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/review?orderId=${order.id}" target="_blank" style="display: inline-block; background-color: #4a3b32; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; font-size: 13px;">Write a Product Review</a>
           </div>` : ''}
 
           <p style="font-size: 13px; color: #666; text-align: center;">

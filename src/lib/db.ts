@@ -371,7 +371,7 @@ const initialSettings: StoreSettings = {
   tagline: 'Handcrafted Candles & Artistic Resin Creations',
   email: 'thecozylittlemoonshine@gmail.com',
   phone: '8341790329',
-  whatsapp: '8341790329 / 7075905496',
+  whatsapp: '8341790329',
   instagram: 'https://www.instagram.com/thelittlecozymoonshine',
   currency: 'INR',
   currencySymbol: '₹',
