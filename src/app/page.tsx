@@ -1,11 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
 import { ProductCard } from '@/components/ProductCard';
+import { WelcomeLoginModal } from '@/components/WelcomeLoginModal';
 import { getDB } from '@/lib/db';
 import {
   Sparkles,
   Flame,
-  ShoppingBag,
   ArrowRight,
   ShieldCheck,
   Star,
@@ -14,7 +14,6 @@ import {
   Truck,
   CheckCircle,
   ChevronRight,
-  Clock,
 } from 'lucide-react';
 import { InstagramIcon } from '@/components/InstagramIcon';
 
@@ -26,11 +25,13 @@ export default async function HomePage() {
 
   const featuredProducts = products.filter((p) => p.isFeatured).slice(0, 4);
   const bestSellers = products.filter((p) => p.isBestseller).slice(0, 4);
-  const saleProducts = products.filter((p) => p.isSale || (p.salePrice && p.salePrice < p.price)).slice(0, 4);
-  const newArrivals = products.filter((p) => p.isNewArrival).slice(0, 4);
 
   return (
     <div className="space-y-16 pb-16">
+
+      {/* Optional Welcome Login Modal — shows once per session for guests */}
+      <WelcomeLoginModal />
+
       {/* Hero Section */}
       <section className="relative bg-gradient-to-b from-[#f5eee6] via-[#faf7f2] to-[#faf7f2] pt-8 pb-16 sm:pt-16 sm:pb-24 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -50,7 +51,7 @@ export default async function HomePage() {
                 Discover our signature eco-friendly soy wax candles and crystal-clear resin crafts. Designed to infuse your home with serene fragrances, luxury textures, and cozy aesthetics.
               </p>
 
-              {/* Action CTA Buttons */}
+              {/* CTA Buttons */}
               <div className="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-3 sm:space-y-0 sm:space-x-4">
                 <Link
                   href="/catalogue?category=candles"
@@ -77,7 +78,7 @@ export default async function HomePage() {
                 </div>
                 <div className="flex items-center space-x-2">
                   <Truck className="w-4 h-4 text-[#b87333] shrink-0" />
-                  <span>Free Shipping &gt; ₹1500</span>
+                  <span>Free Delivery &gt; ₹1000</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Heart className="w-4 h-4 text-[#b87333] shrink-0" />
@@ -86,7 +87,7 @@ export default async function HomePage() {
               </div>
             </div>
 
-            {/* Right Hero Image Composition */}
+            {/* Right Hero Image */}
             <div className="relative">
               <div className="relative mx-auto max-w-md lg:max-w-none">
                 <div className="aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-white">
@@ -97,8 +98,8 @@ export default async function HomePage() {
                   />
                 </div>
                 
-                {/* Floating Overlay Badge 1 */}
-                <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-xl border border-[#ebdcd0] flex items-center space-x-3 hidden sm:flex">
+                {/* Floating Badge 1 */}
+                <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-xl border border-[#ebdcd0] hidden sm:flex items-center space-x-3">
                   <div className="w-10 h-10 rounded-full bg-[#f5eee6] flex items-center justify-center text-[#b87333]">
                     <Star className="w-5 h-5 fill-current" />
                   </div>
@@ -108,19 +109,38 @@ export default async function HomePage() {
                   </div>
                 </div>
 
-                {/* Floating Overlay Badge 2 */}
-                <div className="absolute -top-6 -right-6 bg-[#4a3b32] text-white p-3.5 rounded-2xl shadow-xl border border-[#3b2d24] flex items-center space-x-3 hidden sm:flex">
+                {/* Floating Badge 2 */}
+                <div className="absolute -top-6 -right-6 bg-[#4a3b32] text-white p-3.5 rounded-2xl shadow-xl border border-[#3b2d24] hidden sm:flex items-center space-x-3">
                   <Gift className="w-5 h-5 text-[#e6c594]" />
                   <div className="text-xs">
                     <p className="font-semibold text-[#e6c594]">Special Hampers</p>
                     <p className="text-[10px] text-gray-300">Customized Gift Crate</p>
                   </div>
                 </div>
-
               </div>
             </div>
-
           </div>
+        </div>
+      </section>
+
+      {/* FREE Delivery Banner */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-gradient-to-r from-[#e8f5e9] to-[#f0fdf4] border border-[#a5d6a7] rounded-2xl px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-[#2e7d32] rounded-full flex items-center justify-center shrink-0">
+              <Truck className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <p className="font-bold text-[#1b5e20] text-sm">🎉 FREE Delivery on Orders Above ₹1000!</p>
+              <p className="text-xs text-[#388e3c]">All orders above ₹1000 get free express delivery anywhere in India.</p>
+            </div>
+          </div>
+          <Link
+            href="/catalogue"
+            className="shrink-0 px-5 py-2.5 bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold text-xs rounded-full shadow transition-all"
+          >
+            Shop Now →
+          </Link>
         </div>
       </section>
 
