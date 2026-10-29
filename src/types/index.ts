@@ -43,6 +43,8 @@ export interface Product {
   isBestseller?: boolean;
   isNewArrival?: boolean;
   status: 'active' | 'out_of_stock' | 'hidden';
+  rating?: number;
+  reviewCount?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -162,3 +164,18 @@ export interface StoreSettings {
   smtpPort?: number;
   adminPasswordHash?: string;
 }
+
+export interface ContactMessage {
+  id: string; // e.g. MSG-2026-001
+  name: string;
+  phone: string;
+  email: string;
+  subject: string;
+  message: string;
+  imageUrl?: string;
+  status: 'unread' | 'read' | 'replied';
+  repliedAt?: string;
+  replyNote?: string;
+  createdAt: string;
+}
+

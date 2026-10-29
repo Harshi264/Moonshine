@@ -41,6 +41,33 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   const [customizationValues, setCustomizationValues] = useState<Record<string, string>>({});
   const [activeTab, setActiveTab] = useState<'desc' | 'specs' | 'care' | 'shipping'>('desc');
 
+  // Pincode checker state
+  const [pincode, setPincode] = useState('');
+  const [pincodeResult, setPincodeResult] = useState<{ checked: boolean; serviceable: boolean; message: string } | null>(null);
+
+  const handleCheckPincode = (e: React.FormEvent) => {
+    e.preventDefault();
+    const cleanPin = pincode.trim().replace(/[^0-9]/g, '');
+    if (cleanPin.length !== 6) {
+      setPincodeResult({ checked: true, serviceable: false, message: 'Please enter a valid 6-digit Indian postal pincode.' });
+      return;
+    }
+    if (cleanPin.startsWith('500') || cleanPin.startsWith('501') || cleanPin.startsWith('502')) {
+      setPincodeResult({
+        checked: true,
+        serviceable: true,
+        message: '⚡ Express Delivery: Next-day delivery in Hyderabad! Free delivery on orders ₹1000+.',
+      });
+    } else {
+      setPincodeResult({
+        checked: true,
+        serviceable: true,
+        message: '🚚 Delivery available via Delhivery/Shiprocket in 2-4 business days! Free delivery on ₹1000+.',
+      });
+    }
+  };
+
+
   useEffect(() => {
     async function fetchProductData() {
       setLoading(true);
@@ -182,6 +209,54 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             <h1 className="font-serif text-2xl sm:text-4xl font-bold text-[#3b2d24] leading-tight">
               {product.name}
             </h1>
+
+            {/* Real Rating Display */}
+            {reviews.filter((r) => r.status === 'approved').length > 0 ? (
+              <div className="flex items-center space-x-2 text-xs pt-2">
+                <div className="flex text-[#d4af37]">
+                  {Array.from({ length: 5 }).map((_, i) => {
+                    const approved = reviews.filter((r) => r.status === 'approved');
+                    const avg = approved.reduce((sum, r) => sum + r.rating, 0) / approved.length;
+                    return (
+                      <Star
+                        key={i}
+                        className={`w-4 h-4 ${
+                          i < Math.round(avg) ? 'fill-current text-[#d4af37]' : 'text-gray-300'
+                        }`}
+                      />
+                    );
+                  })}
+                </div>
+                <span className="font-bold text-[#4a3b32]">
+                  {(
+                    reviews
+                      .filter((r) => r.status === 'approved')
+                      .reduce((sum, r) => sum + r.rating, 0) /
+                    reviews.filter((r) => r.status === 'approved').length
+                  ).toFixed(1)}
+                </span>
+                <span className="text-[#8c7868]">
+                  ({reviews.filter((r) => r.status === 'approved').length}{' '}
+                  {reviews.filter((r) => r.status === 'approved').length === 1
+                    ? 'verified review'
+                    : 'verified reviews'}
+                  )
+                </span>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2 text-xs pt-1.5 text-[#8c7868]">
+                <span className="text-[#b87333] font-semibold">✨ Studio Handcrafted</span>
+                <span>•</span>
+                <span className="text-[#8c7868]">Small Batch Artisanal</span>
+                <span>•</span>
+                <Link
+                  href={`/review?productId=${product.id}`}
+                  className="text-[#b87333] hover:underline"
+                >
+                  Write first review
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* Price & Stock Badge */}
@@ -390,16 +465,65 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             </div>
           </div>
 
-          {/* Policy Snippet */}
-          <div className="border-t border-[#ebdcd0] pt-4 grid grid-cols-2 gap-3 text-xs text-[#7a6858]">
-            <div className="flex items-center space-x-2">
+          {/* Interactive Pincode Serviceability Check */}
+          <div className="bg-[#faf7f2] p-4 rounded-2xl border border-[#ebdcd0] space-y-2.5">
+            <div className="flex items-center space-x-2 text-xs font-bold text-[#4a3b32]">
               <Truck className="w-4 h-4 text-[#b87333]" />
-              <span>Ships in 2-3 Days Across India</span>
+              <span>Check Delivery & Pincode Serviceability:</span>
             </div>
-            <div className="flex items-center space-x-2">
-              <ShieldCheck className="w-4 h-4 text-[#b87333]" />
-              <span>Personalized Confirmation</span>
+            <form onSubmit={handleCheckPincode} className="flex gap-2">
+              <input
+                type="text"
+                placeholder="Enter 6-digit Pincode (e.g. 500034)"
+                value={pincode}
+                onChange={(e) => setPincode(e.target.value)}
+                maxLength={6}
+                className="flex-1 p-2 bg-white border border-[#d6c8b8] rounded-xl text-xs text-[#3b2d24] focus:outline-none focus:ring-1 focus:ring-[#b87333]"
+              />
+              <button
+                type="submit"
+                className="px-4 py-2 bg-[#4a3b32] hover:bg-[#b87333] text-white text-xs font-bold rounded-xl transition-colors"
+              >
+                Check
+              </button>
+            </form>
+            {pincodeResult && (
+              <div
+                className={`text-xs p-2.5 rounded-xl font-medium ${
+                  pincodeResult.serviceable
+                    ? 'bg-green-50 text-green-800 border border-green-200'
+                    : 'bg-red-50 text-red-800 border border-red-200'
+                }`}
+              >
+                {pincodeResult.message}
+              </div>
+            )}
+          </div>
+
+          {/* Policy Snippet & WhatsApp Inquiry */}
+          <div className="border-t border-[#ebdcd0] pt-4 space-y-3">
+            <div className="grid grid-cols-2 gap-3 text-xs text-[#7a6858]">
+              <div className="flex items-center space-x-2">
+                <Truck className="w-4 h-4 text-[#b87333]" />
+                <span>Free Express Delivery &gt; ₹1000</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <ShieldCheck className="w-4 h-4 text-[#b87333]" />
+                <span>Razorpay Secure Checkout</span>
+              </div>
             </div>
+
+            <a
+              href={`https://wa.me/918341790329?text=${encodeURIComponent(
+                `Hi! I have a question about ${product.name} on your website.`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-2.5 bg-[#f5eee6] hover:bg-[#ebdcd0] text-[#4a3b32] border border-[#d6c8b8] rounded-full text-xs font-bold flex items-center justify-center space-x-2 transition-colors"
+            >
+              <MessageCircle className="w-3.5 h-3.5 text-[#25D366]" />
+              <span>Ask Studio on WhatsApp (+91 8341790329)</span>
+            </a>
           </div>
 
         </div>

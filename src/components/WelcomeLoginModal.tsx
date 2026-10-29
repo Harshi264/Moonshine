@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import {
   X,
@@ -64,8 +63,9 @@ export function WelcomeLoginModal() {
       } else {
         setLoginError(data.error || 'Login failed. Please try again.');
       }
-    } catch (err: any) {
-      setLoginError('Connection error: ' + err.message);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Unknown error';
+      setLoginError('Connection error: ' + msg);
     } finally {
       setLoginLoading(false);
     }
@@ -113,7 +113,7 @@ export function WelcomeLoginModal() {
           {loginSuccess ? (
             <div className="py-6 text-center space-y-3 animate-fadeIn">
               <CheckCircle className="w-12 h-12 text-[#2e7d32] mx-auto" />
-              <p className="font-bold text-[#2e7d32] text-sm">You're signed in! ✨</p>
+              <p className="font-bold text-[#2e7d32] text-sm">You&apos;re signed in! ✨</p>
               <p className="text-xs text-[#7a6858]">Enjoy shopping at The Little Cozy Moonshine!</p>
             </div>
           ) : (

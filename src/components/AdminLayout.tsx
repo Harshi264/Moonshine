@@ -18,6 +18,7 @@ import {
   X,
   Plus,
   Flame,
+  Inbox,
 } from 'lucide-react';
 
 export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -59,6 +60,7 @@ export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children 
   const navItems = [
     { name: 'Dashboard Overview', href: '/admin', icon: LayoutDashboard },
     { name: 'Orders Management', href: '/admin/orders', icon: ShoppingBag },
+    { name: 'Messages Inbox', href: '/admin/messages', icon: Inbox },
     { name: 'Products Catalogue', href: '/admin/products', icon: Package },
     { name: 'Categories', href: '/admin/categories', icon: Boxes },
     { name: 'Review Moderation', href: '/admin/reviews', icon: Star },
@@ -67,6 +69,7 @@ export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children 
     { name: 'Email Notifications Log', href: '/admin/emails', icon: Mail },
     { name: 'Store Settings', href: '/admin/settings', icon: Settings },
   ];
+
 
   return (
     <div className="min-h-screen bg-[#faf7f2] flex flex-col md:flex-row">

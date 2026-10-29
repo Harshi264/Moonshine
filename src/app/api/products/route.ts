@@ -92,15 +92,33 @@ export async function GET(request: Request) {
   const start = (page - 1) * limit;
   const paginatedProducts = products.slice(start, start + limit);
 
+  const productsWithReviews = paginatedProducts.map((p) => {
+    const productReviews = (db.reviews || []).filter(
+      (r) => r.productId === p.id && r.status === 'approved'
+    );
+    const reviewCount = productReviews.length;
+    const avgRating =
+      reviewCount > 0
+        ? Math.round((productReviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount) * 10) / 10
+        : undefined;
+
+    return {
+      ...p,
+      rating: avgRating,
+      reviewCount,
+    };
+  });
+
   return NextResponse.json({
     success: true,
-    count: paginatedProducts.length,
+    count: productsWithReviews.length,
     total,
     page,
     totalPages,
-    products: paginatedProducts,
+    products: productsWithReviews,
   });
 }
+
 
 /**
  * POST /api/products

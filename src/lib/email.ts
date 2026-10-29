@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { Order, OrderStatus } from '@/types';
+import { Order, OrderStatus, ContactMessage } from '@/types';
 import { getDB, saveSentEmailLog } from '@/lib/db';
 
 // Send notification email to Business Owner
@@ -350,7 +350,7 @@ async function dispatchEmail(toEmail: string, subject: string, html: string, set
       });
 
       return { success: true, simulated: false, message: `Email dispatched to ${toEmail}` };
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('SMTP sending error:', err);
       return { success: true, simulated: true, message: `Email logged to admin panel.` };
     }
@@ -358,3 +358,123 @@ async function dispatchEmail(toEmail: string, subject: string, html: string, set
 
   return { success: true, simulated: true, message: `Email logged to admin panel.` };
 }
+
+// Send instant alert email to Business Owner when a contact/custom order arrives
+export async function sendContactNotificationEmail(msg: ContactMessage): Promise<{ success: boolean; simulated: boolean; message: string }> {
+  const db = getDB();
+  const settings = db.settings;
+  const toEmail = settings.email || 'thelittlecozymoonshine@gmail.com';
+  const businessName = settings.businessName || 'The Little Cozy Moonshine';
+
+  const emailSubject = `📬 NEW MESSAGE: ${msg.subject} — from ${msg.name}`;
+
+  const emailHtml = `
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"><title>New Message</title></head>
+    <body style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f9f6f0; margin: 0; padding: 20px; color: #2d241e;">
+      <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 1px solid #e2d9cd;">
+        <div style="background-color: #4a3b32; color: #f7f3ed; padding: 24px; text-align: center;">
+          <h1 style="margin: 0; font-size: 22px; font-weight: 600;">${businessName}</h1>
+          <p style="margin: 6px 0 0 0; opacity: 0.9; font-size: 14px;">💬 New Contact / Custom Order Inquiry</p>
+        </div>
+        <div style="padding: 24px;">
+          <div style="background-color: #f5eee6; border-left: 4px solid #b87333; padding: 14px; border-radius: 6px; margin-bottom: 20px;">
+            <p style="margin: 0; font-size: 12px; color: #7a6858; text-transform: uppercase; font-weight: bold;">Subject</p>
+            <h2 style="margin: 4px 0 0 0; color: #4a3b32; font-size: 18px;">${msg.subject}</h2>
+          </div>
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px;">
+            <tr><td style="padding: 6px 0; width: 30%; color: #666;"><strong>Customer Name:</strong></td><td style="color: #222; font-weight: bold;">${msg.name}</td></tr>
+            <tr><td style="padding: 6px 0; color: #666;"><strong>Phone Number:</strong></td><td><a href="tel:${msg.phone}" style="color: #b87333;">📞 ${msg.phone}</a> | <a href="https://wa.me/91${msg.phone.replace(/[^0-9]/g, '')}" style="color: #25D366; text-decoration: none; font-weight: bold;">💬 WhatsApp</a></td></tr>
+            <tr><td style="padding: 6px 0; color: #666;"><strong>Email Address:</strong></td><td><a href="mailto:${msg.email}" style="color: #b87333;">${msg.email}</a></td></tr>
+            <tr><td style="padding: 6px 0; color: #666;"><strong>Date & Time:</strong></td><td>${new Date(msg.createdAt).toLocaleString('en-IN')}</td></tr>
+          </table>
+          <div style="background-color: #faf7f2; border: 1px solid #ebdcd0; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+            <p style="margin: 0 0 8px 0; font-weight: bold; color: #4a3b32; font-size: 13px;">Message / Custom Request Details:</p>
+            <p style="margin: 0; line-height: 1.6; color: #3b2d24; font-size: 14px; white-space: pre-wrap;">${msg.message}</p>
+          </div>
+          ${msg.imageUrl ? `
+            <div style="margin-bottom: 20px;">
+              <p style="font-weight: bold; color: #4a3b32; font-size: 13px; margin-bottom: 8px;">Attached Inspiration / Design Photo:</p>
+              <img src="${msg.imageUrl}" alt="Custom Reference" style="max-width: 100%; border-radius: 8px; border: 1px solid #d6c8b8; max-height: 350px;" />
+            </div>
+          ` : ''}
+          <div style="text-align: center; margin-top: 24px;">
+            <a href="https://wa.me/91${msg.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hi ${msg.name}! Thank you for reaching out to The Little Cozy Moonshine regarding: ${msg.subject}.`)}" style="background-color: #25D366; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 13px; display: inline-block; margin-right: 8px;">Reply on WhatsApp</a>
+            <a href="mailto:${msg.email}?subject=${encodeURIComponent(`Re: ${msg.subject} - The Little Cozy Moonshine`)}" style="background-color: #4a3b32; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 13px; display: inline-block;">Reply via Email</a>
+          </div>
+        </div>
+        <div style="background: #e2d9cd; text-align: center; padding: 12px; font-size: 12px; color: #555;">
+          ${businessName} • Studio Notification System
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  saveSentEmailLog({
+    to: toEmail,
+    subject: emailSubject,
+    customerName: msg.name,
+    html: emailHtml,
+  });
+
+  return await dispatchEmail(toEmail, emailSubject, emailHtml, settings);
+}
+
+// Send friendly confirmation auto-reply email to the customer
+export async function sendContactAutoReplyEmail(msg: ContactMessage): Promise<{ success: boolean; simulated: boolean; message: string }> {
+  const db = getDB();
+  const settings = db.settings;
+  const businessName = settings.businessName || 'The Little Cozy Moonshine';
+
+  const emailSubject = `✨ We received your message! — ${businessName}`;
+
+  const emailHtml = `
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"><title>Thank you for contacting us</title></head>
+    <body style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f9f6f0; margin: 0; padding: 20px; color: #2d241e;">
+      <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 1px solid #e2d9cd;">
+        <div style="background-color: #4a3b32; color: #f7f3ed; padding: 24px; text-align: center;">
+          <h1 style="margin: 0; font-size: 22px; font-weight: 600;">${businessName}</h1>
+          <p style="margin: 6px 0 0 0; opacity: 0.9; font-size: 14px;">🕯️ Handcrafted Soy Candles & Resin Crafts • Hyderabad</p>
+        </div>
+        <div style="padding: 24px;">
+          <h2 style="color: #4a3b32; font-size: 18px; margin-top: 0;">Hi ${msg.name},</h2>
+          <p style="line-height: 1.6; color: #554438; font-size: 14px;">
+            Thank you for reaching out to <strong>${businessName}</strong>! We have successfully received your inquiry regarding <strong>${msg.subject}</strong>.
+          </p>
+          <div style="background-color: #f5eee6; border-left: 4px solid #b87333; padding: 14px; border-radius: 6px; margin: 20px 0;">
+            <p style="margin: 0; font-size: 13px; color: #4a3b32; font-weight: bold;">⏱️ Expected Response Time:</p>
+            <p style="margin: 4px 0 0 0; font-size: 13px; color: #6b584a;">We personally review every inquiry and will reply to you within <strong>24 hours</strong> via WhatsApp (${msg.phone}) or email (${msg.email}).</p>
+          </div>
+          <div style="background-color: #faf7f2; border: 1px solid #ebdcd0; border-radius: 8px; padding: 14px; margin-bottom: 20px;">
+            <p style="margin: 0 0 6px 0; font-weight: bold; color: #4a3b32; font-size: 12px; text-transform: uppercase;">Your Message Summary:</p>
+            <p style="margin: 0; color: #555; font-size: 13px; font-style: italic;">"${msg.message}"</p>
+          </div>
+          <p style="font-size: 13px; color: #666; line-height: 1.5;">
+            Need an urgent response for a customized gift hamper or special occasion? Feel free to message our studio directly on WhatsApp at <strong>+91 8341790329</strong>.
+          </p>
+          <div style="text-align: center; margin-top: 24px;">
+            <a href="https://wa.me/918341790329?text=${encodeURIComponent(`Hi! I just submitted a message on your website regarding: ${msg.subject}.`)}" style="background-color: #25D366; color: white; padding: 10px 24px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 13px; display: inline-block;">Chat with us on WhatsApp</a>
+          </div>
+        </div>
+        <div style="background: #e2d9cd; text-align: center; padding: 12px; font-size: 12px; color: #555;">
+          ${businessName} • Banjara Hills, Hyderabad, Telangana, India
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  saveSentEmailLog({
+    to: msg.email,
+    subject: emailSubject,
+    customerName: msg.name,
+    html: emailHtml,
+  });
+
+  return await dispatchEmail(msg.email, emailSubject, emailHtml, settings);
+}
+

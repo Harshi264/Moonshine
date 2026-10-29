@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { Product, Category, Order, Review, Discount, CustomerUser, StoreSettings } from '@/types';
+import { Product, Category, Order, Review, Discount, CustomerUser, StoreSettings, ContactMessage } from '@/types';
 
 const DATA_DIR = path.join(process.cwd(), 'src', 'data');
 const DB_FILE = path.join(DATA_DIR, 'db.json');
@@ -14,6 +14,7 @@ export interface DBData {
   discounts: Discount[];
   customers: CustomerUser[];
   settings: StoreSettings;
+  messages: ContactMessage[];
 }
 
 const initialCategories: Category[] = [
@@ -369,17 +370,40 @@ const initialOrders: Order[] = [
 const initialSettings: StoreSettings = {
   businessName: 'The Little Cozy Moonshine',
   tagline: 'Handcrafted Candles & Artistic Resin Creations',
-  email: 'thecozylittlemoonshine@gmail.com',
+  email: 'thelittlecozymoonshine@gmail.com',
   phone: '8341790329',
   whatsapp: '8341790329',
   instagram: 'https://www.instagram.com/thelittlecozymoonshine',
   currency: 'INR',
   currencySymbol: '₹',
-  address: 'Hyderabad, Telangana, India',
+  address: 'Banjara Hills, Hyderabad, Telangana 500034, India',
   freeShippingThreshold: 1000,
   defaultShippingFee: 70,
   adminPasswordHash: 'moonshine2026',
 };
+
+const initialMessages: ContactMessage[] = [
+  {
+    id: 'MSG-2026-001',
+    name: 'Aanya Kapoor',
+    phone: '9876543210',
+    email: 'aanya.kapoor@example.com',
+    subject: 'Custom Order Request',
+    message: 'Hi! I would like to order 15 customized resin bookmarks with dried pink roses and gold flakes for my bridal shower favor bags.',
+    status: 'read',
+    createdAt: '2026-09-27T14:20:00Z',
+  },
+  {
+    id: 'MSG-2026-002',
+    name: 'Rohit Mehta',
+    phone: '9123456780',
+    email: 'rohit.mehta@example.com',
+    subject: 'Bulk or Gifting Hampers',
+    message: 'Looking for 30 Diwali candle hampers for our corporate team in Hyderabad. Could you share hamper options and bulk discounts?',
+    status: 'unread',
+    createdAt: '2026-09-29T09:15:00Z',
+  },
+];
 
 function ensureDataFile() {
   if (!fs.existsSync(DATA_DIR)) {
@@ -395,6 +419,7 @@ function ensureDataFile() {
       discounts: [],
       customers: [],
       settings: initialSettings,
+      messages: initialMessages,
     };
     fs.writeFileSync(DB_FILE, JSON.stringify(defaultDb, null, 2), 'utf-8');
   }
@@ -409,7 +434,12 @@ export function getDB(): DBData {
   try {
     const data = fs.readFileSync(DB_FILE, 'utf-8');
     const parsed = JSON.parse(data) as DBData;
+    if (!parsed.categories) parsed.categories = initialCategories;
+    if (!parsed.orders || parsed.orders.length === 0) parsed.orders = initialOrders;
+    if (!parsed.reviews || parsed.reviews.length === 0) parsed.reviews = initialReviews;
     if (!parsed.customers) parsed.customers = [];
+    if (!parsed.messages) parsed.messages = initialMessages;
+    if (!parsed.discounts) parsed.discounts = [];
     return parsed;
   } catch (error) {
     console.error('Error reading db.json:', error);
@@ -421,9 +451,11 @@ export function getDB(): DBData {
       discounts: [],
       customers: [],
       settings: initialSettings,
+      messages: initialMessages,
     };
   }
 }
+
 
 export function saveDB(data: DBData): void {
   ensureDataFile();

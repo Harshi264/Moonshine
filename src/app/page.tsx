@@ -19,12 +19,22 @@ import { InstagramIcon } from '@/components/InstagramIcon';
 
 export default async function HomePage() {
   const db = getDB();
-  const products = db.products.filter((p) => p.status === 'active');
+  const rawProducts = db.products.filter((p) => p.status === 'active');
   const categories = db.categories;
   const reviews = db.reviews.filter((r) => r.status === 'approved');
 
-  const featuredProducts = products.filter((p) => p.isFeatured).slice(0, 4);
-  const bestSellers = products.filter((p) => p.isBestseller).slice(0, 4);
+  const products = rawProducts.map((p) => {
+    const productReviews = reviews.filter((r) => r.productId === p.id);
+    const reviewCount = productReviews.length;
+    const rating = reviewCount > 0
+      ? Math.round((productReviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount) * 10) / 10
+      : undefined;
+    return { ...p, rating, reviewCount };
+  });
+
+  const featuredProducts = products.filter((p) => p.isFeatured).slice(0, 8);
+  const bestSellers = products.filter((p) => p.isBestseller).slice(0, 8);
+
 
   return (
     <div className="space-y-16 pb-16">

@@ -2,11 +2,10 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Product } from '@/types';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
-import { Heart, Star, ShoppingBag, Eye, CheckCircle } from 'lucide-react';
+import { Heart, Star, ShoppingBag } from 'lucide-react';
 
 export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   const { addToCart } = useCart();
@@ -88,18 +87,34 @@ export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
           </p>
         </div>
 
-        {/* Rating preview */}
-        <div className="flex items-center space-x-1 text-xs text-[#8c7868]">
-          <div className="flex text-[#d4af37]">
-            <Star className="w-3.5 h-3.5 fill-current" />
-            <Star className="w-3.5 h-3.5 fill-current" />
-            <Star className="w-3.5 h-3.5 fill-current" />
-            <Star className="w-3.5 h-3.5 fill-current" />
-            <Star className="w-3.5 h-3.5 fill-current" />
+        {/* Rating preview: Connected to real reviews */}
+        {product.reviewCount && product.reviewCount > 0 ? (
+          <div className="flex items-center space-x-1 text-xs text-[#8c7868]">
+            <div className="flex text-[#d4af37]">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star
+                  key={i}
+                  className={`w-3.5 h-3.5 ${
+                    i < Math.round(product.rating || 5)
+                      ? 'fill-current text-[#d4af37]'
+                      : 'text-gray-300'
+                  }`}
+                />
+              ))}
+            </div>
+            <span className="font-bold text-[#4a3b32] ml-1">
+              {(product.rating || 5).toFixed(1)}
+            </span>
+            <span>({product.reviewCount} {product.reviewCount === 1 ? 'review' : 'reviews'})</span>
           </div>
-          <span className="font-medium text-[#4a3b32] ml-1">5.0</span>
-          <span>(12+ reviews)</span>
-        </div>
+        ) : (
+          <div className="flex items-center space-x-1.5 text-[11px] text-[#8c7868]">
+            <span className="text-[#b87333] font-semibold">✨ Studio Handcrafted</span>
+            <span>•</span>
+            <span className="text-[#8c7868]">100% Soy Wax</span>
+          </div>
+        )}
+
 
         {/* Price & Action */}
         <div className="pt-2 border-t border-[#f2e8de] flex items-center justify-between">

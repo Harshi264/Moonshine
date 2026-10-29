@@ -16,7 +16,7 @@
         "https://images.unsplash.com/photo-1602874801007-bd458bb1b8b6?auto=format&fit=crop&w=1000&q=80",
         "https://images.unsplash.com/photo-1596435707659-d89069d67566?auto=format&fit=crop&w=1000&q=80"
       ],
-      "stock": 24,
+      "stock": 22,
       "variants": [
         {
           "id": "v1",
@@ -343,6 +343,191 @@
       "status": "active",
       "createdAt": "2026-09-29T11:40:05.809Z",
       "updatedAt": "2026-09-29T11:40:05.809Z"
+    },
+    {
+      "id": "prod-007",
+      "slug": "calming-french-lavender-soy-candle",
+      "name": "Calming French Lavender & Chamomile Soy Candle",
+      "category": "candles",
+      "subcategory": "Aromatherapy",
+      "description": "Distilled with pure French lavender and wild chamomile blossoms in natural 100% soy wax. Helps reduce stress, promote deep sleep, and create a peaceful bedroom sanctuary.",
+      "price": 699,
+      "salePrice": 549,
+      "discountPercent": 21,
+      "isSale": true,
+      "images": [
+        "https://images.unsplash.com/photo-1596435707659-d89069d67566?auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "stock": 20,
+      "variants": [
+        {
+          "id": "v1",
+          "name": "Classic Amber Glass (180g)",
+          "price": 699,
+          "salePrice": 549,
+          "stock": 14
+        },
+        {
+          "id": "v2",
+          "name": "Large Double-Wick Glass (300g)",
+          "price": 1099,
+          "salePrice": 899,
+          "stock": 6
+        }
+      ],
+      "dimensions": "8cm x 8cm x 9cm",
+      "weight": "180g wax weight",
+      "materials": "100% Eco Soy Wax, Cotton Wick, Amber Glass",
+      "fragranceInfo": "Top: Fresh Lavender | Heart: Chamomile, Eucalyptus | Base: Cedarwood",
+      "careInstructions": "Trim wick to 1/4 inch before lighting. Burn for 2-3 hours initially.",
+      "shippingInfo": "Ships within 2 days across India.",
+      "tags": [
+        "Lavender",
+        "Aromatherapy",
+        "Sleep",
+        "Stress Relief",
+        "Best Seller"
+      ],
+      "isFeatured": true,
+      "isBestseller": true,
+      "isNewArrival": true,
+      "status": "active",
+      "createdAt": "2026-10-01T10:00:00Z",
+      "updatedAt": "2026-10-01T10:00:00Z"
+    },
+    {
+      "id": "prod-008",
+      "slug": "custom-resin-initial-keychain-flower",
+      "name": "Custom Resin Alphabet Keychain with Dried Flowers",
+      "category": "customized-products",
+      "subcategory": "Accessories",
+      "description": "Handmade crystal epoxy resin alphabet keychain featuring real dried baby's breath flowers, shiny gold leaf foil, and a luxury gold keyring with lobster clasp. Personalize with any letter A-Z!",
+      "price": 299,
+      "salePrice": 249,
+      "discountPercent": 17,
+      "isSale": true,
+      "images": [
+        "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "stock": 40,
+      "dimensions": "4.5cm x 4cm",
+      "weight": "25g",
+      "materials": "Epoxy Resin, Natural Pressed Botanicals, 24k Style Gold Flakes, Alloy Keyring",
+      "customizationFields": [
+        {
+          "id": "c1",
+          "label": "Alphabet Letter (A-Z)",
+          "type": "text",
+          "required": true,
+          "helpText": "Enter 1 Letter (e.g. 'H')"
+        },
+        {
+          "id": "c2",
+          "label": "Flower Color",
+          "type": "select",
+          "options": [
+            "Pastel Pink",
+            "Sky Blue",
+            "Lavender Purple",
+            "Red Rose"
+          ],
+          "required": true
+        }
+      ],
+      "careInstructions": "Avoid dropping on hard surfaces. Wipe with microfiber cloth.",
+      "shippingInfo": "Custom made to order. Dispatched in 2-3 business days.",
+      "tags": [
+        "Keychain",
+        "Personalized",
+        "Gift Idea",
+        "Resin Art",
+        "Budget Friendly"
+      ],
+      "isFeatured": true,
+      "isBestseller": true,
+      "isNewArrival": true,
+      "status": "active",
+      "createdAt": "2026-10-05T12:00:00Z",
+      "updatedAt": "2026-10-05T12:00:00Z"
+    },
+    {
+      "id": "prod-009",
+      "slug": "festive-marigold-candle-gift-box",
+      "name": "Festive Blossom Diya & Soy Candle Gift Crate",
+      "category": "gift-sets",
+      "subcategory": "Festive Hampers",
+      "description": "The perfect festive & housewarming gift crate! Contains 2 Scented Soy Candles (Vanilla & Rose), 2 Resin Floral Diyas with Gold Foiling, and a handwritten festival greeting card in a luxury kraft gift box.",
+      "price": 1799,
+      "salePrice": 1399,
+      "discountPercent": 22,
+      "isSale": true,
+      "images": [
+        "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "stock": 15,
+      "dimensions": "28cm x 18cm x 10cm",
+      "weight": "950g",
+      "materials": "Pure Soy Candles, Artisanal Resin Diyas, Gift Box with Ribbon",
+      "customizationFields": [
+        {
+          "id": "c1",
+          "label": "Card Message",
+          "type": "textarea",
+          "required": false,
+          "helpText": "Add custom festive wishes"
+        }
+      ],
+      "careInstructions": "Store candles away from direct sunlight.",
+      "shippingInfo": "Free Express Shipping included.",
+      "tags": [
+        "Festive Hamper",
+        "Diwali Gift",
+        "Gift Set",
+        "Handcrafted in Hyderabad"
+      ],
+      "isFeatured": true,
+      "isBestseller": true,
+      "isNewArrival": true,
+      "status": "active",
+      "createdAt": "2026-10-10T14:00:00Z",
+      "updatedAt": "2026-10-10T14:00:00Z"
+    },
+    {
+      "id": "prod-010",
+      "slug": "gold-flake-resin-tea-light-holders",
+      "name": "Gold Foil Botanical Resin Tea Light Holders (Pair of 2)",
+      "category": "resin-crafts",
+      "subcategory": "Candle Accessories",
+      "description": "Handcrafted crystal clear resin tea light holders embedded with golden foil flakes and real pressed daisy petals. Includes 2 complimentary unscented soy tea lights.",
+      "price": 799,
+      "salePrice": 649,
+      "discountPercent": 19,
+      "isSale": true,
+      "images": [
+        "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "stock": 18,
+      "dimensions": "8cm diameter each",
+      "weight": "220g (Pair)",
+      "materials": "Heat-Resistant Epoxy Resin, Dried Daisy Blossoms, Gold Leaf",
+      "careInstructions": "Use standard aluminium cup tea lights inside. Wipe clean with damp cloth.",
+      "shippingInfo": "Ships within 2-3 business days.",
+      "tags": [
+        "Tea Light Holder",
+        "Resin Decor",
+        "Home Decor",
+        "Pair"
+      ],
+      "isFeatured": true,
+      "isBestseller": false,
+      "isNewArrival": true,
+      "status": "active",
+      "createdAt": "2026-10-15T09:30:00Z",
+      "updatedAt": "2026-10-15T09:30:00Z"
     }
   ],
   "categories": [
@@ -390,6 +575,82 @@
     }
   ],
   "orders": [
+    {
+      "id": "ORD-2026-57887",
+      "customerName": "Customer",
+      "phone": "",
+      "email": "",
+      "deliveryAddress": "",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "pincode": "",
+      "items": [
+        {
+          "productId": "prod-001",
+          "productName": "Cozy Vanilla & Warm Amber Soy Candle",
+          "productImage": "https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1000&q=80",
+          "price": 599,
+          "quantity": 2,
+          "customizationDetails": {}
+        }
+      ],
+      "subtotal": 1198,
+      "discountTotal": 120,
+      "shippingFee": 0,
+      "totalAmount": 1078,
+      "preferredContact": "WhatsApp",
+      "status": "Confirmed",
+      "statusHistory": [
+        {
+          "status": "New",
+          "timestamp": "2026-10-29T12:16:24.276Z",
+          "note": "Razorpay checkout initiated"
+        },
+        {
+          "status": "Confirmed",
+          "timestamp": "2026-10-29T12:16:37.497Z",
+          "note": "Razorpay payment verified (ID: pay_sim_test123)"
+        }
+      ],
+      "createdAt": "2026-10-29T12:16:24.276Z",
+      "updatedAt": "2026-10-29T12:16:37.497Z",
+      "internalNotes": "Razorpay Payment ID: pay_sim_test123"
+    },
+    {
+      "id": "ORD-2026-20742",
+      "customerName": "Customer",
+      "phone": "",
+      "email": "",
+      "deliveryAddress": "",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "pincode": "",
+      "items": [
+        {
+          "productId": "prod-001",
+          "productName": "Cozy Vanilla & Warm Amber Soy Candle",
+          "productImage": "https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1000&q=80",
+          "price": 599,
+          "quantity": 2,
+          "customizationDetails": {}
+        }
+      ],
+      "subtotal": 1198,
+      "discountTotal": 120,
+      "shippingFee": 0,
+      "totalAmount": 1078,
+      "preferredContact": "WhatsApp",
+      "status": "New",
+      "statusHistory": [
+        {
+          "status": "New",
+          "timestamp": "2026-10-29T12:14:24.066Z",
+          "note": "Razorpay checkout initiated"
+        }
+      ],
+      "createdAt": "2026-10-29T12:14:24.066Z",
+      "updatedAt": "2026-10-29T12:14:24.066Z"
+    },
     {
       "id": "ORD-2026-41650",
       "customerName": "Gujjula Harshitha Reddy",
@@ -569,20 +830,70 @@
       "createdAt": "2026-09-25T09:00:00Z"
     }
   ],
-  "discounts": [],
+  "discounts": [
+    {
+      "id": "disc-001",
+      "title": "Welcome First Order Discount",
+      "code": "FIRST10",
+      "targetType": "all",
+      "discountPercent": 10,
+      "isActive": true
+    },
+    {
+      "id": "disc-002",
+      "title": "Cozy Festive Special",
+      "code": "COZY15",
+      "targetType": "all",
+      "discountPercent": 15,
+      "isActive": true
+    }
+  ],
   "settings": {
     "businessName": "The Little Cozy Moonshine",
     "tagline": "Handcrafted Candles & Artistic Resin Creations",
-    "email": "thecozylittlemoonshine@gmail.com",
+    "email": "thelittlecozymoonshine@gmail.com",
     "phone": "8341790329",
-    "whatsapp": "7075905496",
+    "whatsapp": "8341790329",
     "instagram": "https://www.instagram.com/thelittlecozymoonshine",
     "currency": "INR",
     "currencySymbol": "₹",
-    "address": "Hyderabad, Telangana, India",
-    "freeShippingThreshold": 1500,
+    "address": "Banjara Hills, Hyderabad, Telangana 500034, India",
+    "freeShippingThreshold": 1000,
     "defaultShippingFee": 70,
     "adminPasswordHash": "moonshine2026"
   },
-  "customers": []
+  "customers": [],
+  "messages": [
+    {
+      "id": "MSG-2026-4144",
+      "name": "Divya Rao",
+      "phone": "9848012345",
+      "email": "divya.rao@example.com",
+      "subject": "Custom Order Request",
+      "message": "Need 20 custom soy candles for an anniversary party in Hyderabad.",
+      "status": "unread",
+      "createdAt": "2026-10-29T12:07:08.550Z"
+    },
+    {
+      "id": "MSG-2026-001",
+      "name": "Aanya Kapoor",
+      "phone": "9876543210",
+      "email": "aanya.kapoor@example.com",
+      "subject": "Custom Order Request",
+      "message": "Hi! I would like to order 15 customized resin bookmarks with dried pink roses and gold flakes for my bridal shower favor bags. Can we personalize each with the guest's initials?",
+      "imageUrl": "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80",
+      "status": "read",
+      "createdAt": "2026-09-27T14:20:00Z"
+    },
+    {
+      "id": "MSG-2026-002",
+      "name": "Rohit Mehta",
+      "phone": "9123456780",
+      "email": "rohit.mehta@example.com",
+      "subject": "Bulk or Gifting Hampers",
+      "message": "Looking for 30 Diwali candle hampers for our corporate team in Hyderabad. Could you share hamper options, scent varieties, and bulk pricing?",
+      "status": "unread",
+      "createdAt": "2026-09-29T09:15:00Z"
+    }
+  ]
 }

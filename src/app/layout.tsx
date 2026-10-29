@@ -6,6 +6,7 @@ import { WishlistProvider } from '@/context/WishlistContext';
 import { CustomerAuthProvider } from '@/context/CustomerAuthContext';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
+import { FloatingWhatsApp } from '@/components/FloatingWhatsApp';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -20,6 +21,7 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://thelittlecozymoonshine.in'),
   title: {
     default: 'The Little Cozy Moonshine | Handcrafted Soy Candles & Resin Crafts',
     template: '%s | The Little Cozy Moonshine',
@@ -35,23 +37,32 @@ export const metadata: Metadata = {
     'Personalized Gift Hampers',
     'Hyderabad Handmade Studio',
     'Cozy Candle Gifts',
+    'The Little Cozy Moonshine',
   ],
   authors: [{ name: 'The Little Cozy Moonshine' }],
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
-    title: 'The Little Cozy Moonshine',
-    description: 'Handcrafted Soy Wax Candles & Artistic Resin Creations',
-    url: 'https://www.instagram.com/thelittlecozymoonshine',
+    title: 'The Little Cozy Moonshine | Handcrafted Studio',
+    description: 'Handcrafted Soy Wax Candles & Artistic Resin Creations in Hyderabad',
+    url: '/',
     siteName: 'The Little Cozy Moonshine',
     images: [
       {
         url: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1200&q=80',
         width: 1200,
         height: 630,
-        alt: 'Handmade Soy Candles',
+        alt: 'Handmade Soy Candles and Resin Art',
       },
     ],
     locale: 'en_IN',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'The Little Cozy Moonshine',
+    description: 'Handcrafted Soy Wax Candles & Artistic Resin Creations',
   },
   robots: {
     index: true,
@@ -69,6 +80,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Navbar />
               <main className="flex-grow">{children}</main>
               <Footer />
+              <FloatingWhatsApp />
             </WishlistProvider>
           </CartProvider>
         </CustomerAuthProvider>
@@ -76,3 +88,4 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
+

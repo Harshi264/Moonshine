@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
@@ -18,6 +18,7 @@ import {
   PhoneCall,
   User,
   MessageSquare,
+  Truck,
 } from 'lucide-react';
 import { InstagramIcon } from '@/components/InstagramIcon';
 
@@ -26,6 +27,7 @@ export const Navbar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const pathname = usePathname();
+  const router = useRouter();
   const { itemCount } = useCart();
   const { wishlistCount } = useWishlist();
   const { customer } = useCustomerAuth();
@@ -33,7 +35,8 @@ export const Navbar = () => {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      window.location.href = `/catalogue?search=${encodeURIComponent(searchQuery.trim())}`;
+      router.push(`/catalogue?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchOpen(false);
     }
   };
 
@@ -43,11 +46,11 @@ export const Navbar = () => {
     { name: 'Candles 🕯️', href: '/catalogue?category=candles' },
     { name: 'Resin Crafts ✨', href: '/catalogue?category=resin-crafts' },
     { name: 'Gift Sets 🎁', href: '/catalogue?category=gift-sets' },
+    { name: 'Track Order', href: '/track' },
+    { name: 'Contact & Custom', href: '/contact' },
     { name: 'Sale 🔥', href: '/catalogue?category=sale' },
-    { name: 'About Us', href: '/about' },
-    { name: 'Contact', href: '/contact' },
-    { name: 'Write a Review', href: '/review' },
   ];
+
 
   return (
     <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-[#ebdcd0] transition-all">
